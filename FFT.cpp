@@ -1,6 +1,6 @@
 // typedef ll to be int if you want int
 // typedef ld to be double if you want double
-// FFT takes a Vector of Complex by reference numbers and finds their Fourier/Inverse Fourier transform.
+// FFT takes a Vector of Complex numbers by reference and finds their Discrete Fourier/Inverse Fourier transform.
 // Size of the Vector must be a power of 2
 // To find Fourier transform the parameter inv=1, For Inverse Fourier Transform inv=-1
 // The function Convolution takes two Vectors(VL), adjusts their size to be a power of 2 
