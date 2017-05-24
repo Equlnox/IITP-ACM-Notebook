@@ -1,0 +1,471 @@
+\documentclass[12pt]{article}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{hyperref}
+\usepackage[paperheight=13in,paperwidth=9.5in]{geometry}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=red,
+    bookmarks=true,
+    %pdfpagemode=FullScreen,
+}
+
+%opening
+\title{\begin{Huge}
+Binary Search
+\end{Huge}}
+\author{\textbf{Bhavit Sharma and Prateek Karnal}
+}
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+\begin{large}
+This is an attempt to explain Binary Search. We'll first try to solve one of the fundamental problems in computer science and will try to abstract or generalize Binary Search by solving various problems. 
+\end{large}
+\end{abstract}
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+
+\newpage
+\setcounter{page}{1}
+
+\begin{large}
+\section{Introduction}
+One of the fundamental problems in Computer Science is to retrieve the locate an element i.e. finding it's position in a given ordered list of numbers. More formally the problem can be stated as follows :-\\\\
+\textit{Given an array let's say \textbf{X} in which the elements are sorted in ascending order.
+We have to return the index of an element \textbf{E} if it exists in the array or return -1.}
+
+\subsection{Linear Search}
+This is trivial and left as an exercise for the reader. 
+\subsection{Better Solution aka Binary Search}
+Instead of Linear Search which works in $O(n)$ time, we can take advantage of the fact that our list is ordered. How? We can see that if we compare given $E$ with any element of the array, we can get a rough idea of where our element might be. Suppose if we compare $E$ with $X[i]$ where $0\leq i \leq |X| - 1$.\\
+We can have three possibilities while comparing.
+
+\begin{enumerate}
+\item \textbf{$X[i] > E$}\\
+We know that if $E$ exists in our array, it can only exists on the left of our array. This is because $\forall j > i, \ X[j] > E$ as well, as our array is sorted in ascending order.
+
+\item \textbf{$X[i] < E$}\\
+By doing the argument similar to in the last point, we can say that if our $E$ exists, it can only exists on the right of $i$.
+
+\item \textbf{if $X[i] = E$}\\
+Trivial.
+\end{enumerate}
+
+Now we have gotten a general idea regarding the problem. If we choose certain $i$, then it will be reduce our original problem from array of size $|X|$ to array of size of $|X|-i$ or $i$ depending upon where $E$ lies with respect to $i$. So the next question which arises is what $i$ to choose. Will it be a random index or some particular element of the array. It turns out that if we take $i$ to be the middle of the array $X$, then it will lead to the overall best complexity of $O(\log_2 n)$. Proof is left as an exercise for the reader. (\textit{Hint: }Try to write the recursive definition of the complexity function.)
+
+\subsection{Code}
+\begin{minted}[frame=single, autogobble, linenos=false]{c++}
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+	vector<int> a = {1, 2, 3, 4, 5, 6, 7, 8}; 
+	int E, l = 0, r = (int)a.size() - 1;
+	cin >> E;
+	
+	while(l <= r){
+		int mid = l + r >> 1; 
+		if(a[mid] > E) r = mid - 1; 
+		else if(a[mid] == E)r = mid, l = -1; 
+		else l = mid + 1; 
+	}
+	
+	cout << (a[r] == E ? l : -1) << endl; 
+	return 0;  
+}
+\end{minted}
+\section{The Recipe of a Binary Search}
+
+
+Till now we concerned ourselves with finding an element in a range.
+Also note that in the implementation above, if there are multiple numbers with the desired value in the array, we cannot say for sure which one is returned. It turns out that we can have much more control over binary search which can make our work way easier.
+\subsection{The ingredients}
+There are essentialy two ingredients in a binary search.
+\begin{itemize}
+	\item{A condition on a discrete variable}
+	\item{A series of discrete variables divided in two halves by the condition}
+\end{itemize}
+Here the condition can be anything.\\
+The only thing that must satisfy for application of binary search is that the series of variables over which we search should be divided in two proper halves by the condition. One half which satisfies the condition and the other which doesn't.\\
+\ [\textbf{Note:} You might argue that we can apply a binary search on a continuous variable as well. This however involves working with a precision as a terminating conditon. This is the same as dividing the continuous range into discrete values with each subsequent value being greater than the last by the given precision. Although it can sometimes be more practical to consider our variable continuous, but in the end it is not much different from the discrete case.]\\
+There are two possible cases-
+\begin{itemize}
+	\item {If $x$ satisfies the condition then $x+1$ also satisfies.\\i.e The right section of the range satisfies the condition.}
+	\item {If $x$ satisfies the condition then $x-1$ also satisfies.\\i.e The left section of the range satisfies the condition.}
+\end{itemize}
+In both cases the range is divided into two halves. Now if we consider the two sections as right and left instead
+of satisfying and not-satisfying, then both cases become essentially same problems.\\
+Now that we have established our requirements and conventions we will talk about the two sections as left and
+right sections.\\
+\ [Note that a section could be empty as well.]
+\subsection{Our Aim}
+We have two possible aims in binary search-
+\begin{itemize}
+	\item{Finding the last element of the left section}
+	\item{Finding the first element of the right section}
+\end{itemize}
+\subsection{The Method}
+The basic principle of binary search is that by checking the condition for a value of the discrete variable, we
+can reduce our search space.\\
+Let us consider the case when we want the last element of the left section.
+On checking the condition
+\begin{itemize}
+	\item{if the value belongs to the left section, we can remove all the values which lie further to the left.}
+	\item{if the value belongs to the right section, we can remove the current value including all the values to the
+		right}
+\end{itemize}	
+Similarly when we want to find the first element of the right section.
+On checking the condition
+\begin{itemize}
+	\item{if the value belongs to the left section, we can remove the current value and all the values which lie further
+		to the left.}
+	\item{if the value belongs to the right section, we can remove all the values which lie further to the right}
+\end{itemize}
+
+\subsection{The edge case}
+
+When we remove all the values that lie further to the left, if the current value is the leftmost value then we
+end up not reducing our search space at all.\\
+Similarly, when we remove all the values that lie further to the right we won’t reduce our search space if the
+current value is the rightmost.\\
+This normally is not a problem because as we take the middle element or an element closes to middle.\\ However,
+when only two elements are left in the search space this becomes a problem as both elements are either leftmost
+or rightmost.\\\\
+It is easy to counter this however.
+We can simply always take the $Ceil$ of middle in the first case and the $floor$ of middle in the second.
+
+\section{Introductory Problems}
+\paragraph{\large Problem 1:}\textit{Given a sorted array $X$, find the first element in $X$ which is not less than a given number $Y$. Return -1 if no such element exists.}
+
+Solution: First we need to check if we can apply Binary Search on it. If we compare $Y$ with $X[mid]$, we can see that if $Y >\ X[mid]$, then our answer will lie to right side of $mid$. But if $Y\leq X[mid]$, then our answer will lie on the left side of $mid$, with one of the possible answers being $X[mid]$ also, so we'll keep it in our interval.
+
+\begin{minted}[frame=single, autogobble, linenos=false]{c++}
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+	vector<int> a = {1, 2, 3, 3, 3, 4, 5, 7, 8}; 
+	int E, l = 0, r = (int)a.size() - 1;
+	cin >> E; 
+
+	while(l < r){
+		int mid = l + r >> 1; 
+		if(a[mid] >= E) r = mid; 
+		else l = mid + 1;
+	}
+	
+	cout << (a[r] >= E ? r : -1) << endl; 
+	return 0;  
+}
+\end{minted}
+
+\paragraph{\large Problem 2:}\textit{Given a sorted array $X$, find the first element in $X$ which is greater than a given number $Y$.}
+
+Solution: First we need to check if we can apply Binary Search on it. If we compare $Y$ with $X[mid]$, we can see that if $Y > X[mid]$, then our answer lie to the right side of $mid$. But it $Y < X[mid]$, then our answer will lie on left side of $mid$, with one of the possible answers being $X[mid]$ also, so we'll keep it in our interval.
+
+\begin{minted}[frame=single, autogobble, linenos=false]{c++}
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+	vector<int> a = {1, 2, 3, 3, 3, 4, 5, 7, 8}; 
+	int E, l = 0, r = (int)a.size() - 1;
+	cin >> E; 
+
+	while(l < r){
+		int mid = l + r >> 1; 
+		if(a[mid] > E) r = mid; 
+		else l = mid + 1;
+	}
+	
+	cout << (a[r] > E ? r : -1) << endl; 
+	return 0;  
+}
+\end{minted}
+
+\paragraph{\large Problem 3:}\textit{Given a sorted array $X$, find the last index of element which is not greater than $Y$ or return -1 if it doesn't exits}
+
+Solution: Let's say we have a $mid$. Now if $X[mid] > Y$ then we move to the left side of the binary search. But if $X[mid]\leq E$, then we move to the right side of the binary search, with one of the possible solutions being $mid$ also. So here we are essentially taking the first element of the right side. So, while writing the code for binary search, we'll take our $mid$ to be $\frac{a+b+1}{2}$. 
+\begin{minted}[frame=single,autogobble,linenos=false]{c++}
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+	vector<int> a = {1, 2, 3, 3, 3, 4, 5, 7, 8}; 
+	int E, l = 0, r = (int)a.size() - 1;
+	cin >> E; 
+
+	while(l < r){
+		int mid = l + r + 1 >> 1; 
+		if(a[mid] > E) r = mid - 1; 
+		else l = mid;
+	}
+	
+	cout << (a[r] <= E ? r : -1) << endl; 
+	return 0;  
+}
+\end{minted}
+
+\paragraph{\large Problem 4:}\textit{Given a function $y=f(x)$ which is a monotonic function with $f(-\infty) \rightarrow -\infty$ and $f(\infty) \rightarrow \infty$. Find the root of this function correct upto $d$ decimal digits.}
+
+Solution: Let us take two point on this function $a$ and $b$ such that $f(a)f(b) < 0$, then we know that our root (lets say $r$) lies between $a$ and $b$. How can we apply binary search on this? We choose $mid = \frac{a+b}{2}$. So if $f(mid)f(a) < 0$, then our root lies between $a$ and $mid$. If $f(mid)f(a) = 0$, then $mid$ is our root. If $f(mid)f(a) > 0$, then our root lies between $mid$ and $b$. It turns out that this may take forever to calculate the root to infinite precision. So to calculate it upto $d$ degrees of precision, we let this binary search run for at most $log_2((b - a + 1)(10^{d}))$ times. (Why?)
+
+\paragraph{\large Problem 5:}\textbf{SPOJ Problem : \href{http://www.spoj.com/problems/AGGRCOW/}{Aggressive Cows}}
+
+Solution: First we need to understand how we can apply binary search on this. Lets suppose the minimum distance between $2$ cows be $d$. Then of course, the minimum distance between two cows can be decreased further more by bring cows closer together. So if we can get minimum distance to be $d$, then we can also get minimum distance $\leq d$. On the another hand, lets say we can't a minimum distance of $d$ between cows. This means that we also can't get $\geq d$ minimum distance between cows(obviously).Hence this satisfies our property of the binary search and hence it's applicable.
+
+\textbf{How to check if a particular $d$ is valid?} We sort all $x_i$ and give $x_0$ the first cow. Then we assign another cow at the first $x_i\ such\ that\ x_i \geq x_0 + d$. And then continue giving the cows this way. You can prove greedily that this ensures the maximum number of cows distribution. 
+Finally we check if the total assigned cows are $\geq c$ for a $d$ to be valid.
+
+\textbf{Complexity} is $O(n\log_2 {n})$
+\begin{minted}[autogobble, frame=single, linenos=false]{c++} 
+    bool check(const vi & x, const int & mid, const int & c){
+    	int tot = 0, i = 0, j = 0, n = (int)x.size();
+    	while(i < n){
+    		tot++; 
+    		while(i < n && x[i] - x[j] < mid)i++; 
+    		j = i; 
+    	}
+    	return tot >= c; 
+    }  
+    int main(){
+    	SYNC; 
+    	int T; cin >> T; 
+    	while(T--){
+    		int n, c; 
+    		cin >> n >> c; 
+    		vi x(n); 
+     
+    		REP(i, n) cin >> x[i];
+    		sort(ALL(x)); 
+    		int l = 0, r = (int)1e9; 	
+    		
+    		while(l < r){
+    			int mid = l + r + 1 >> 1;
+    			if(check(x, mid, c))
+    				l = mid; 
+    			else 
+    				r = mid - 1; 
+    		}
+    		cout << l << endl; 
+    	}
+    } 
+\end{minted}
+\ [\textbf{Note:} Here we have taken the right $mid$ because we have to combine it with the right interval in the case when $d$ is valid.]
+
+\paragraph{\large Problem 6:}\textbf{UVA: 11413} \href{https://uva.onlinejudge.org/external/114/11413.pdf}{Click}
+
+Solution: The first thing to see intuitively is that for a given maximum capacity let's say $C$, we can fill them with the containers satisfying the constraints, then obviously $\forall C\ ' \geq C$ we can fill the containers satisfying the given constraints. But if for a maximum capacity we can't fill the containers with the vessels satisfying the given constraints [\textbf{Note: This will happen if the total containers required to be filled by vessels exceed the total containers given in the problem or there is a vessel with capacity $V_i > C$}] then $\forall C\ '\leq C$ we can't fill the containers as that would require even more containers or we can get a vessel with capacity $>C\ '$. Hence our condition for binary search satisfies.
+
+Now How to check if a particular maximum capacity $C$ is valid? We start from the first vessel and keep filling the first container until the sum of the capacities of all the vessels $ \leq C$. After that we start again greedily to fill another containers. And then we'll check in the end if containers filled are $\leq m$.You can prove that it will be the most optimum way to ensure least numbers of containers filled. [\textbf{Proof is left as an exercise for the reader.}].
+
+\begin{minted}[autogobble, breaklines, linenos=false, frame=single]{c++}
+#include <bits/stdc++.h>
+using namespace std; 
+
+int n, m, V[1000];
+
+int check(int c) {
+    int cap = 0, cnt = 0;
+    int i = 0;
+    for(i = 0; i < n; i++) {
+        if(V[i] > c)
+            return 1000000;
+        if(cap < V[i])
+            cap = c, cnt++;
+        cap -= V[i];
+    }
+    return cnt;
+}
+
+int main() {
+    int i;
+    while(scanf("%d %d", &n, &m) == 2) {
+        for(i = 0; i < n; i++)
+            scanf("%d", &V[i]);
+        int l = 1, r = 1000000*n; 
+        while(l < r) {
+            int mid = (l + r)>> 1;
+            int cnt = check(mid);
+            if(cnt > m)
+                l = mid+1;
+            else
+                r = mid;
+        }
+        printf("%d\n", l);
+    }
+    return 0;
+}
+\end{minted}   
+
+\paragraph{\large Problem 7:} \textbf{Codeforces Round 361, Div 2C} : \href{http://codeforces.com/contest/689/problem/C}{Click}
+
+Solution: The first thing to see intuitively is that if for a given $n$, we can get total number of ways chocolate distribution to be $\geq m$, then obviously $\forall\ N\geq\ n$, we can get total number of ways $\geq m$. But if for some $n$, we get total number of ways $<\ m$, then $\forall\ N \leq n$, we'll get total number of ways $<m$. \ [\textbf{Note the inequalities}]. Hence our condition for binary search satisfies. Now for a particular $n$, how to calculate the number of ways of distributing chocolates?
+
+Suppose the number of chocolates that the first thief has be $X$. Now the number of chocolates the last thief is going to have will be $k^{3}X$. So we have to find the total solutions of this inequality $k^{3}X \leq n$. So we'll iterate over $k \geq 2$ to find valid $X$ till $k^{3} \leq n$. 
+
+\begin{minted}[autogobble, breaklines, frame=single, linenos=false]{c++}
+LL ch(LL mid){
+	LL ans = 0; 
+	for(LL k = 2; k <= mid && k * k <= mid && k * k * k <= mid; k++){
+		ans += mid/(k * k * k); 
+	}
+	return ans; 
+}
+
+int main(){
+	SYNC; 
+	LL m; 
+	cin >> m;
+	LL l = 0, r = (LL)1e16;
+	
+	while(l < r){
+		LL mid = l + r >> 1; 
+		if(ch(mid) >= m){
+			r = mid; 
+		}
+		else l = mid + 1; 
+	}
+
+	if(ch(l) == m) cout << l << endl; 
+	else cout << -1 << endl; 
+	return 0; 
+}
+\end{minted} 
+
+\paragraph{\large Problem 8:}\textbf{CSAcademy: Round 20, Div 2C} \href{https://csacademy.com/contest/round-20/#task/city-upgrades}{Click}
+
+Solution: We can see that the if our best distance is let's say $D$ then obviously we can also upgrade the cities in such a way that the maximum distance between regular and upgraded city will be $\geq D$ which means it will be monotonic and we can apply binary search on $D$.
+ 
+We sort the $x_{i}'s$ first.
+Now to check if a particular $D$ is valid, we can greedly start from first city and upgrade the city at distance $D$ (We choose the last city with distance atmost $D$ because it minimizes the number of upgraded cities). Now we start from this upgraded city and keep ignoring the cities to right which have distance $\leq D$.
+
+\begin{minted}[autogobble, breaklines, frame=single, linenos=false]{c++}
+vi v;
+int ch(int mid, int n){
+	int ans = 0, ptr = 0; 
+
+	while(ptr < n){
+		int i = ptr; ptr++;  
+		while(ptr < n && v[i] + mid >= v[ptr]){
+			ptr++; 
+		}
+		ans++;ptr--;i = ptr; 
+		while(ptr < n && v[ptr] - v[i] <= mid)
+			ptr++; 
+	}
+
+	return ans; 
+}
+
+int main(){
+	SYNC; 
+	int n , k; cin >> n >> k; 
+	v.resize(n); 
+
+	REP(i, n){
+		cin >> v[i]; 
+	}
+	sort(ALL(v)); 
+
+	int l = 0 , r = v[n - 1] + 1;
+
+	cerr << ch(1, n) << endl; 
+
+	REP(i , 32){
+		int mid = l + r >> 1; 
+		if(ch(mid, n) > k){
+			l = mid + 1; 
+		}
+		else 
+			r = mid; 
+	}
+
+	cout << r << endl; 
+	return 0; 
+}
+\end{minted}
+
+\paragraph{\large \textsc{Problem 9:}}\textbf{Codeforces Round 350 D2} \href{http://codeforces.com/contest/670/problem/D1}{Click}
+
+Solution:- You should see intuitively that if we can make $X$ dishes then obviously we can make $ \leq X$ dishes also. But if we can't make $X$ dishes, then we can't make $\geq X$ dishes also because we won't have sufficient ingredients or the magic powder. So binary search is applicable.
+
+\textbf{How to check if a particular $X$ is valid?}. If we make $X$ dishes, then we'll need $a[i].X$ grams of ingredients of $i_{th}$ ingredient, but we already have $b[i]$ grams of $i_{th}$ ingredient, so we'll need $max(0, a[i].X - b[i])$[$0$ in case $b[i] > a[i].X$] grams of magic powder for $i_{th}$ ingredient. We'll sum the magic powders needed for all ingredient $0 \leq i \leq n - 1$ and check if it's $\leq k$.\\ 
+\href{http://codeforces.com/contest/670/submission/25956342}{Click for code} [\textbf{Why I've taken the right mid?}]\\
+
+\paragraph{\large \textsc{Problem 10:}} \href{http://codeforces.com/contest/371/problem/C}{\textbf{Codeforces Round 218 D2} }
+
+Solution: It is almost similar to the previous problem. Left as an exercise for the reader. \href{http://codeforces.com/contest/371/submission/25957289}{Code}.
+
+\paragraph{\large \textsc{Problem 11:}} \href{https://code.google.com/codejam/contest/4224486/dashboard#s=p1&a=1}{\textbf{GCJ: Problem B, Round 1A, 2015}}
+
+\begin{minted}[autogobble, breaklines, frame=single]{c++}
+bool ch(LL mid, vi & b, int & n){
+	LL ans = 0; 
+	for(auto & i : b){
+		ans += (mid / i + 1); 
+	}
+	return (ans >= n); 
+}
+
+int main(){
+	SYNC; 
+	int T; int caseno = 1; 
+	cin >> T; 
+
+	while(T--){
+		cout << "Case #" << caseno++ << ": "; 
+		int b, n; 
+		cin >> b >> n; 
+		vi m(b); 
+		REP(i, b) cin >> m[i]; 
+		LL l = 0, r = (LL)1e15; 
+		while(l < r){
+			auto mid = l + r >> 1; 
+			if(ch(mid, m, n))
+				r = mid; 
+			else l = mid + 1; 
+		}
+
+		int ans = 0;
+		REP(i, b){
+			n -= (l - 1)/m[i] + 1; 
+		}
+		REP(i, b){
+			if(l % m[i])continue; 
+			n--; 
+			if(!n){
+				ans = i + 1; break; 
+			}
+		}
+		cout << ans << endl; 
+	}
+	return 0; 
+}
+\end{minted}
+\begin{LARGE}
+
+\paragraph{\large \textsc{Problem 12:}}
+\href{}
+[\textbf{Note: I'll add more introductory and advanced problems later on}]
+\end{LARGE}
+
+\end{large}
+\end{document}
