@@ -1,4 +1,4 @@
-// edmond karp's algorithm // O(V^2.E)
+// edmond karp's algorithm in O(V^2.E)
 // similar to dinic's from stanford notebook
 struct edge {
 	int u,v,c,f;
@@ -11,9 +11,9 @@ vvi graph;
 // par stores parent in bfs, ptr stores the edge from par[u] -> u
 vi par, ptr;
 void addEdge(int u, int v, int c) {
-	graph[u].pb(edges.size())
+	graph[u].pb(edges.size());
 	edges.pb(edge(u,v,c,0));
-	graph[v].pb(edges.size())
+	graph[v].pb(edges.size());
 	edges.pb(edge(v,u,0,0));
 }
 int bfs(int S, int T) {
