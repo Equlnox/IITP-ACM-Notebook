@@ -8,7 +8,7 @@ struct edge {
 int n;
 vector<edge> edges;
 vvi graph;
-// par stores parent in bfs, ptr stores the edges from par[u] = u
+// par stores parent in bfs, ptr stores the edge from par[u] -> u
 vi par, ptr;
 void addEdge(int u, int v, int c) {
 	graph[u].pb(edges.size())
