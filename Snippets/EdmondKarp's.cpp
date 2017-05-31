@@ -45,7 +45,7 @@ int bfs(int S, int T) {
 int flow(int S, int T) {
 	int tot = 0;
 	// reset
-	for(auto & e : edges) edges.f = 0;
+	for(auto & e : edges) e.f = 0;
 	while(int cur = bfs(S, T))
 		tot += cur;
 	return tot;
