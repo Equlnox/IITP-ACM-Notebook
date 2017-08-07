@@ -6,7 +6,6 @@
 // Time complexity O(log(size))
 #include <bits/stdc++.h>
 using namespace std;
-#define SYNC					ios_base::sync_with_stdio(0);cin.tie(0);
 /* Equinox */
 template<typename T>
 class SegTree{
@@ -33,7 +32,7 @@ public:
 	}
 	void update(int p,T v){for(t[p+=size]=v;p>>=1;)t[p]=combine(t[p<<1],t[p<<1|1]);}
 };
-int32_t main(){SYNC
+int32_t main(){
 	int n;
 	cin>>n;
 	SegTree<int> tree([](int a,int b){return a+b;},0,n);
