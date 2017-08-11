@@ -16,7 +16,6 @@ public:
 	T identity;
 	L zero;
 	T (*combine)(T,T);
-	void (*evaluate)(T&,T&,int);
 	void (*apply)(T&,L&,L&,int k);
 	int size;
 	int height;
@@ -26,7 +25,7 @@ public:
 		identity=e;
 		zero=z;
 		t.assign(2*n,e);
-		lz.assign(2*n,z);
+		lz.assign(n,z);
 		size=n;
 		height = sizeof(int)*8-__builtin_clz(n);
 	}
@@ -40,10 +39,9 @@ public:
 		}
 	}
 	void reassign(int p){
-		for(p>>=1;p>0;p>>=1){
+		for(p>>=1;p>0;p>>=1)
 			if(lz[p]==zero)
 				t[p]=combine(t[p<<1],t[p<<1|1]);
-		}
 	}
 	T query(int l,int r){
 		push(l+=size);
@@ -63,14 +61,8 @@ public:
 		int k=1;
 		int l0=l,r0=r;
 		for(;l<=r;r>>=1,l>>=1,k<<=1){
-			if(l&1){
-				apply(t[l],lz[l],v,k);
-				l++;
-			}
-			if(!(r&1)){
-				apply(t[r],lz[r],v,k);
-				r--;
-			}
+			if(l&1)		apply(t[l],lz[l],v,k),l++;
+			if(!(r&1))	apply(t[r],lz[r],v,k),r--;
 		}
 		reassign(l0);
 		reassign(r0);
