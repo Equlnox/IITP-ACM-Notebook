@@ -1,0 +1,1018 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage{minted}
+\usepackage{listings}
+\usepackage[paperheight=11in,paperwidth=9.5in,margin=1cm]{geometry}
+\usepackage{multicol}
+\usepackage{lscape}
+
+\begin{document}
+\begin{landscape}
+\begin{multicols}{2}
+%\lstset{numbers=left,numbersep=10pt,language=c++}
+\begin{center}
+\textbf{\underline{Notes for ACM ICPC by Upstream Flow(Bhavit,Prateek,Chirag)}}
+\end{center}
+
+	\underline{\textbf{Basic Template}}
+\begin{minted}[frame=single,linenos=false,obeytabs=true,tabsize=1]{c++}
+#define un(x) x.erase(unique(all(x)), x.end())
+
+LL MOD = (LL)1e9 + 7; 
+LL mulmod(LL a, LL b, const LL & m) {
+	LL q = (LL)(((LD)a*(LD)b)/(LD)m); 
+	LL r = a*b - q*m; 
+	if (r>m)r %= m; 
+	if (r<0)r += m; 
+	return r; 
+}
+
+template <typename T, typename S>
+T expo(T e, S n) { 
+	T x = 1, p = e; 
+	while (n){
+		if (n & 1)x = x*p; p = p*p;
+		n >>= 1; 
+	}
+	return x;
+}
+
+template <typename T>
+T powerL(T e, T n, const T & m){
+	T x = 1, p = e; 
+	while (n){
+		if (n & 1)x = mulmod(x, p, m); 
+		p = mulmod(p, p, m); 
+		n >>= 1; 
+	}
+	return x;
+}
+\end{minted}
+\newpage
+\begin{center}
+	\underline{\textbf{String Algorithms}}
+\end{center}
+
+\begin{flushleft}
+	\underline{KMP Algorithm}
+\end{flushleft}
+
+\begin{minted}[frame=single, autogobble,linenos=true, linenos=false]{c++}
+vector<int> kmp(string & KMP){
+    int KMPN = (int)KMP.size(); int q = -1;vector<int> pi(KMPN); ``
+    pi[0] = -1;
+    for(int i = 1; i < KMPN; i++){
+        while(q >= 0 &&  KMP[i] != KMP[q + 1])
+            q = pi[q];
+        if(KMP[i] == KMP[q + 1])
+            q++;
+        pi[i] = q;
+    }
+    return pi; 
+}
+int Q_ = -1; 
+for(int i = 0; i < n ;i++) {
+    while(Q_ >= 0 && s[i] != t[Q_ + 1])
+        Q_ = pi[Q_];
+    if(s[i] == t[Q_ + 1])
+        Q_++;
+    if(Q_ == m - 1) {//string matched. 
+        Q_ = pi[Q_];
+    }
+}
+\end{minted}
+
+\begin{flushleft}
+\underline{Z Algorithm}
+\end{flushleft}
+\begin{minted}[frame=single, linenos=false, autogobble,linenos=true]{c++}
+
+vector<int> z_compute(string & S_) {
+	int zn = S_.size();
+	vector<int> z((int)S_.size() + 10); 
+	int l = 0, r = 0; z[0] = 0; 
+	for (int i = 1; i < zn; i++) {
+		if (i <= r)
+			z[i] = min(r - i + 1, z[i - l]);
+		while (i + z[i] < zn && S_[z[i]] == S_[i + z[i]])
+			++z[i];
+		if (i + z[i] - 1 > r)
+			l = i, r = i + z[i] - 1;
+	}
+	return z; 
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{\underline{Suffix Array and LCP Array}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}
+
+bool comp(pii a, pii b) {
+	return (a.first.first == b.first.first ? a.first.second < b.first.second : a.first.first < b.first.first);
+} int suffix[20][N]; vi suff,lcp,inv_suff;
+void suffix_array() {
+	for (int i = 0; i < n; i++)
+		suffix[0][i] = s[i] - 'a';
+	vector<pii> L; L.clear(); L.resize(n);
+	for (int cnt = 1, stp = 1, cur_rank = 0; cnt < n; cnt <<= 1, cur_rank = 0, ++stp) {
+		for (int i = 0; i < n; i++) {
+			L[i].first.first = suffix[stp - 1][i];
+			L[i].first.second = (i + cnt < n ? suffix[stp - 1][i + cnt] : -64);
+			L[i].second = i;
+		}
+
+		sort(L.begin(), L.end(), comp);
+		suffix[stp][L[0].second] = 0;
+
+		for (int i = 1; i < n; i++) {
+			if (L[i].first.first != L[i - 1].first.first || L[i].first.second != L[i - 1].first.second) {
+				cur_rank++;
+			}
+			suffix[stp][L[i].second] = cur_rank;
+		}
+	}
+	suff.clear(); inv_suff.clear(); inv_suff.resize(n);
+	for (int i = 0; i < n; i++) {
+		suff.push_back(L[i].second);
+		inv_suff[L[i].second] = i;
+	}
+}
+void LCP() {
+	lcp.clear(); lcp.resize(n);
+	for (int i = 0, l = 0; i < n; i++) {
+		int j = inv_suff[i];
+		if (j > 0) {
+			int k = suff[j - 1];
+			l = max(l - 1, 0);
+			while (s[k + l] == s[i + l] && s[k+l] != '$')
+				l++;
+			lcp[j] = l;}}}
+\end{minted}
+
+\begin{center}
+\textbf{\underline{Graph Algorithms}}
+\end{center}
+
+\begin{flushleft}
+\textbf{\underline{Articulation Points and Bridges}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}
+int dis[N], low[N], par[N], AP[N],vis[N],tits; 
+void update(int u , int i, int child) {
+    //For Cut Vertices
+    if(par[u] != -1 && low[i] >= dis[u]) AP[u] = true;
+    if(par[u] == -1 && child > 1) AP[u] = true;
+    
+    //For Finding Cut Bridge
+    if(low[i] > dis[u]){
+        //articulation bridge found.
+    }
+}
+void dfs(int u){
+    vis[u] = true;
+    low[u] = dis[u] = (++tits); int child = 0;
+    for(int i : g[u]) {
+        if(!vis[i]){
+            child++;
+            par[i] = u;
+            dfs(i);
+            low[u] = min(low[u] , low[i]);
+            update(u, i, child);
+        }
+        else if(i != par[u]) {
+            low[u] = min(low[u] , dis[i]);
+        }
+    }
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{\underline{Union Find}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}
+vi root, ra; //Set root[i]=i initially and all ranks to be zero 
+int findset(int i) {
+	return (root[i] == i) ? i : (root[i] = findset(root[i]));
+}
+bool isSameSet(int i, int j) {
+	return findset(i) == findset(j);
+}
+void unionSet(int i, int j) { 
+	if (!isSameSet(i, j)) {
+		int x = findset(i), y = findset(j);
+		if (ra[x] > ra[y]) { root[y] = x;  }
+		else { 
+			root[x] = y;
+			if (ra[x] == ra[y]) ra[y]++; 
+		}
+	}
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{\underline{Max Flow Algorithm}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}
+struct flow_graph{
+    int MAX_V,E,s,t,head,tail;
+    int *cap,*to,*next,*last,*dist,*q,*now;
+    flow_graph(){}
+    flow_graph(int V, int MAX_E){
+        MAX_V = V; E = 0;
+        cap = new int[2*MAX_E], to = new int[2*MAX_E], next = new int[2*MAX_E];
+        last = new int[MAX_V], q = new int[MAX_V], dist = new int[MAX_V], now = new int[MAX_V];
+        fill(last,last+MAX_V,-1);
+    }
+    void clear(){
+        fill(last,last+MAX_V,-1);
+        E = 0;
+    }
+    void add_edge(int u, int v, int uv, int vu = 0){
+        to[E] = v, cap[E] = uv, next[E] = last[u]; last[u] = E++;
+        to[E] = u, cap[E] = vu, next[E] = last[v]; last[v] = E++;
+    }
+	bool bfs(){
+		fill(dist,dist+MAX_V,-1);
+		head = tail = 0;
+		
+		q[tail] = t; ++tail;
+		dist[t] = 0;
+		
+		while(head<tail){
+			int v = q[head]; ++head;
+			
+			for(int e = last[v];e!=-1;e = next[e]){
+				if(cap[e^1]>0 && dist[to[e]]==-1){
+					q[tail] = to[e]; ++tail;
+					dist[to[e]] = dist[v]+1;
+				}
+			}
+		}
+		return dist[s]!=-1;
+	}
+	int dfs(int v, int f){
+		if(v==t) return f;
+		
+		for(int &e = now[v];e!=-1;e = next[e]){
+			if(cap[e]>0 && dist[to[e]]==dist[v]-1){
+				int ret = dfs(to[e],min(f,cap[e]));
+				
+				if(ret>0){
+					cap[e] -= ret;
+					cap[e^1] += ret;
+					return ret;
+				}
+			}
+		}
+		return 0;
+	}
+	long long max_flow(int source, int sink){
+		s = source; t = sink;
+		long long f = 0;
+		int x;
+		
+		while(bfs()){
+			for(int i = 0;i<MAX_V;++i) now[i] = last[i];
+			
+			while(true){
+				x = dfs(s,INT_MAX);
+				if(x==0) break;
+				f += x;
+			}
+		}
+		return f;
+	}
+}G;
+int main(){
+	int V,E,u,v,c;
+	scanf("%d %d",&V,&E);
+	G = flow_graph(V,E);
+	for(int i = 0;i<E;++i){
+		scanf("%d %d %d",&u,&v,&c);
+		G.add_edge(u-1,v-1,c,c);
+	}
+	printf("%lld\n",G.max_flow(0,V-1));
+	return 0;
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{\underline{Undirected Maximum Flow}}
+\end{flushleft}
+
+\begin{flushleft}
+\textbf{\underline{Maximal BiPartite Matching}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}
+// This code performs maximum bipartite matching.
+//
+// Running time: O(|E| |V|) -- often much faster in practice
+//
+//   INPUT: w[i][j] = edge between row node i and column node j
+//   OUTPUT: mr[i] = assignment for row node i, -1 if unassigned
+//           mc[j] = assignment for column node j, -1 if unassigned
+//           function returns number of matches made
+
+#include <vector>
+
+using namespace std;
+
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+
+bool FindMatch(int i, const VVI &w, VI &mr, VI &mc, VI &seen) {
+  for (int j = 0; j < w[i].size(); j++) {
+    if (w[i][j] && !seen[j]) {
+      seen[j] = true;
+      if (mc[j] < 0 || FindMatch(mc[j], w, mr, mc, seen)) {
+        mr[i] = j;
+        mc[j] = i;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+int BipartiteMatching(const VVI &w, VI &mr, VI &mc) {
+  mr = VI(w.size(), -1);
+  mc = VI(w[0].size(), -1);
+  
+  int ct = 0;
+  for (int i = 0; i < w.size(); i++) {
+    VI seen(w[0].size());
+    if (FindMatch(i, w, mr, mc, seen)) ct++;
+  }
+  return ct;
+}
+\end{minted}
+
+
+\begin{flushleft}
+\textbf{\underline{FFT Algorithm}}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,linenos=false,breaklines]{c++}	
+// Convolution using the fast Fourier transform (FFT).
+//
+// INPUT:
+//     a[1...n]
+//     b[1...m]
+//
+// OUTPUT:
+//     c[1...n+m-1] such that c[k] = $sum_{i=0}^k a[i]b[k-i]$
+//
+// Alternatively, you can use the DFT() routine directly, which will
+// zero-pad your input to the next largest power of 2 and compute the
+// DFT or inverse DFT.
+#include <iostream>
+#include <vector>
+#include <complex>
+
+using namespace std;
+
+typedef long double DOUBLE;
+typedef complex<DOUBLE> COMPLEX;
+typedef vector<DOUBLE> VD;
+typedef vector<COMPLEX> VC;
+
+struct FFT {
+  VC A;
+  int n, L;
+
+  int ReverseBits(int k) {
+    int ret = 0;
+    for (int i = 0; i < L; i++) {
+      ret = (ret << 1) | (k & 1);
+      k >>= 1;
+    }
+    return ret;
+  }
+
+  void BitReverseCopy(VC a) {
+    for (n = 1, L = 0; n < a.size(); n <<= 1, L++) ;
+    A.resize(n);
+    for (int k = 0; k < n; k++) 
+      A[ReverseBits(k)] = a[k];
+  }
+  
+  VC DFT(VC a, bool inverse) {
+    BitReverseCopy(a);
+    for (int s = 1; s <= L; s++) {
+      int m = 1 << s;
+      COMPLEX wm = exp(COMPLEX(0, 2.0 * M_PI / m));
+      if (inverse) wm = COMPLEX(1, 0) / wm;
+      for (int k = 0; k < n; k += m) {
+	COMPLEX w = 1;
+	for (int j = 0; j < m/2; j++) {
+	  COMPLEX t = w * A[k + j + m/2];
+	  COMPLEX u = A[k + j];
+	  A[k + j] = u + t;
+	  A[k + j + m/2] = u - t;
+	  w = w * wm;
+	}
+      }
+    }
+    if (inverse) for (int i = 0; i < n; i++) A[i] /= n;
+    return A;
+  }
+
+  // c[k] = sum_{i=0}^k a[i] b[k-i]
+  VD Convolution(VD a, VD b) {
+    int L = 1;
+    while ((1 << L) < a.size()) L++;
+    while ((1 << L) < b.size()) L++;
+    int n = 1 << (L+1);
+
+    VC aa, bb;
+    for (size_t i = 0; i < n; i++) aa.push_back(i < a.size() ? COMPLEX(a[i], 0) : 0);
+    for (size_t i = 0; i < n; i++) bb.push_back(i < b.size() ? COMPLEX(b[i], 0) : 0);
+    
+    VC AA = DFT(aa, false);
+    VC BB = DFT(bb, false);
+    VC CC;
+    for (size_t i = 0; i < AA.size(); i++) CC.push_back(AA[i] * BB[i]);
+    VC cc = DFT(CC, true);
+
+    VD c;
+    for (int i = 0; i < a.size() + b.size() - 1; i++) c.push_back(cc[i].real());
+    return c;
+  }
+
+};
+
+int main() {
+  double a[] = {1, 3, 4, 5, 7};
+  double b[] = {2, 4, 6};
+
+  FFT fft;
+  VD c = fft.Convolution(VD(a, a + 5), VD(b, b + 3));
+
+  // expected output: 2 10 26 44 58 58 42
+  for (int i = 0; i < c.size(); i++) cerr << c[i] << " ";
+  cerr << endl;
+  
+  return 0;
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{\underline{Segment Tree With 2 different Lazy Propogation}}\\
+\textbf{\underline{Tested on Spoj http://www.spoj.com/problems/SEGSQRSS/}}\\
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true, frame=single,breaklines]{c++}
+const int N = (int)1e5 + 10; 
+int a[N], n , q; 
+/*Reset L[i] to lazy(), t[i] = node()*/
+struct node{
+	LL sum1, sum2; 
+	node() : sum1(0), sum2(0){}
+	node(LL temp, LL _temp) : sum1(temp), sum2(_temp){}
+}t[N << 2]; 
+
+struct lazy{
+	int t1, t2, x1, x2; // represents the type of the query we want to make. 
+	lazy() : t1(-1) , t2(-1), x1(0), x2(0){}
+	lazy(int a, int b, int c , int d): t1(a), t2(b), x1(c), x2(d){}
+}L[N << 2]; 
+
+node combine(node & a, node & b){
+	node c;
+	c.sum1 = a.sum1 + b.sum1; 
+	c.sum2 = a.sum2 + b.sum2; 
+	return c; 
+}
+
+void propogate1(int x,int l , int r){
+	lazy & la = L[x]; 
+	if(la.t1 != -1){
+		int & num = la.x1; 
+		t[x].sum1 += (r - l + 1)*(1LL)*(num*num) + 2*num*1LL*(t[x].sum2); 
+		t[x].sum2 += (r - l + 1)*1LL*(num);
+		if(l != r){
+			L[x << 1].t1 = true; L[x << 1].x1 += num; 
+			L[x << 1|1].t1 = true; L[x << 1|1].x1 += num; 
+		}
+		num = 0; 
+		la.t1 = -1; 
+	}
+}
+
+void propogate2(int x,int l , int r){
+	lazy & la = L[x]; 
+	if(la.t2 != -1){
+		int & num = la.x2; 
+		t[x].sum1 = (r - l + 1)*1LL*(num*num); 
+		t[x].sum2 = (r - l + 1)*1LL*num; 
+		if(l != r){
+			L[x << 1].t1 = -1;L[x << 1].x2 = num; L[x << 1].t2 = true; L[x << 1].x1 = 0;  
+			L[x << 1|1].t1 = -1;L[x << 1 | 1].x2 = num; L[x << 1 | 1].t2 = true; L[x << 1 | 1].x1 = 0; 
+		}
+		num = 0; 
+		la.t2 = -1; 
+	}
+}
+
+void update2(int x, int start , int end, int l , int r , int num){
+	propogate2(x, start, end); 
+	propogate1(x , start, end); 
+
+	if(start > end || end < l || start > r)
+		return; 
+
+	if(start >= l && end <= r){ 
+		L[x].t2 = true; L[x].x2 = num;
+		propogate2(x, start, end);  
+		return; 
+	}
+
+	int mid = (start + end) >> 1; 
+	update2(x << 1, start, mid, l , r, num); update2(x << 1 | 1 , mid + 1, end, l , r , num); 
+	t[x] = combine(t[x << 1], t[ x << 1 | 1]); 
+}
+
+void update1(int x, int start , int end, int l , int r , int num){
+	propogate2(x , start, end); 
+	propogate1(x, start, end) ; 
+
+	if(start > end || end < l || start > r)
+		return; 
+
+	if(start >= l && end <= r){ 
+		L[x].t1 = true; L[x].x1 += num; 
+		propogate1(x, start, end); 
+		return; 
+	}
+
+	int mid = (start + end) >> 1; 
+	update1(x << 1, start, mid, l , r, num); update1(x << 1 | 1 , mid + 1, end, l , r , num); 
+	t[x] = combine(t[x << 1], t[ x << 1 | 1]); 
+}
+
+LL query(int x, int start, int end, int l , int r){
+	propogate2(x, start, end); 
+	propogate1(x, start, end); 
+	if(start > end || start > r || end < l)
+		return 0; 
+
+	if(start >= l && end <= r)
+		return t[x].sum1; 
+
+	int mid = (start + end) >> 1; 
+	return query(x << 1 , start, mid , l , r) + query(x << 1 | 1 , mid + 1, end, l , r); 
+}
+
+void build(int x, int l , int r){
+	if(l == r){
+		t[x].sum1 = (a[l]*a[l]); 
+		t[x].sum2 = a[l]; 
+		return; 
+	}
+	int mid = ( l + r ) >> 1; 
+	build(x << 1,l, mid); build(x << 1 | 1, mid + 1, r); 
+	t[x] = combine(t[x << 1] , t[x << 1 | 1]); 
+	return; 
+}
+\end{minted}
+
+
+\begin{flushleft}
+\textbf{\underline{Sublime Settings}}\\
+Build System
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,breaklines=true]{python}
+{
+	"cmd": ["g++ -std=c++11 ${file} -o ${file_path}/${file_base_name} && ${file_path}/${file_base_name}</home/equinox/Documents/CP/inputf.in>	
+	/home/equinox/Documents/CP/outputf.in"],
+	"shell":true
+}
+\end{minted}
+
+\begin{flushleft}
+\textbf{Snippet Sublime Settings}
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,breaklines=true]{c++}
+<snippet><content><![CDATA[
+#define _CRT_SECURE_NO_WARNINGS
+#include <bits/stdc++.h>
+using namespace std;
+using LL = long long; 
+typedef long long               ll;
+typedef pair<int, int>          pii;
+typedef vector<int>             vi;
+#define SYNC		ios_base::sync_with_stdio(0);cin.tie(0); 
+ll MOD = 1000000007;
+#define rep(i,b)   for (int i=0; i < b; i++)
+#define REP(i,n) 	for(int i = 0; i < n;i++)
+#define REPN(i,n) 	for(int i = 1; i <= n;i++)
+#define ALL(x)  	 (x).begin, (x).end()
+#define fi           first
+#define se           second
+#define pp           push_back
+#define pb 		     emplace_back
+#define dzx 		cerr<<"here";
+#define deb(x)		cerr << #x << " here "<< x;
+#define debn(x)		cerr << #x << " here " << x << "\n"; 
+//START
+int main()
+{
+	SYNC
+	
+	return 0;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	 <tabTrigger>zxc</tabTrigger> 
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope> 
+</snippet>
+\end{minted}
+
+
+\begin{flushleft}
+\textbf{\textit{Tree Algorithms}}\\
+\textbf{\underline{Centroid, Centre and Diameter of a tree}}\\
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,breaklines, frame=single, tabsize=0.5]{c++}
+const int N = (int)1e5 + 10;
+vector<vector<int>> centroid_tree, g;
+bool CentMark[N]; int child[N];  
+
+void dfs(int u,int p, bool cond, int & centroid, int nodes){
+	child[u] += cond;
+	bool possible = true;  	
+	for(int i : g[u]){
+		if(i != p && !CentMark[i]){
+			dfs(i,u, cond, centroid, nodes);
+			child[u] += (cond ? child[i] : 0); 
+			possible &= (!cond ?((child[i]) <= (nodes/2)): false);
+		}
+	}
+	if(possible && (nodes - child[u]) <= (nodes)/2)
+		centroid = u; 
+	return;
+}
+
+int find_centroid(int src){
+	memset(child, 0 , sizeof child);
+	int centroid = -1;
+	dfs(src, -1, 1, centroid, 0); 
+	dfs(src,-1,0, centroid, child[src]);
+
+	CentMark[centroid] = true; 
+	return centroid; 
+}
+
+int decompose(int u){
+	int centroid = find_centroid(u); 
+
+	for(int i : g[centroid]){
+		if(!CentMark[i]){
+			int SubTreeCentroid = decompose(i); 
+			centroid_tree[SubTreeCentroid].push_back(centroid); 
+			centroid_tree[centroid].push_back(SubTreeCentroid);
+		}
+	}
+
+	return centroid; 
+}
+\end{minted}
+
+
+\begin{flushleft}
+\underline{\textbf{Centre and Diameter of Tree}}\\
+To find the centre once we got the Centre is given by simple formula:-\\
+\textbf{$diam(G) = 2maxlevel + |C| - 1$}\\
+Below is the implementation for the same:-
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,frame=single,breaklines]{c++}
+const int N = (int)1e5 + 10; // Number of nodes in graph
+int maxlevel = 0; // Level of center of graph
+int level[N]; // Level of node
+int degree[N]; // Degree of node
+vector<vector<int>> g;
+
+// Start from leaves
+set<int> center(){
+    set <int> c; // Center of graph
+    queue <int> q; // Queue for algo
+    
+    for (int i = 0; i < N; i++) {
+        if (degree[i] == 1) {
+            q.push(i);
+        }
+    }
+
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+
+        // Remove leaf and try to add its parent
+        for (int i : g[u]) {
+            degree[i]--;
+            if (degree[i] == 1) {
+                q.push(i);
+                level[i] = level[v] + 1;
+                maxlevel = max(maxlevel, level[i]);
+            }
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        if (level[i] == maxlevel) {
+            c.insert(i);
+        }
+    }
+    return c; 
+}
+\end{minted}
+
+
+%\begin{flushleft}
+%Some Problems on DP on tree(My AC Solutions)\\
+%\textbf{\textit{Given tree T with n nodes, how many subtrees (T') of T have at most K edges connected to (T - T')?}}
+%{\underline{HackerRank Cut Tree(My AC link https://www.hackerrank.com/challenges/cuttree/submissions/code/33276651)}}
+%\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,breaklines,frame=single]{c++}
+const int N = 60; 
+int n, k;
+vector<vll> dp1; vector<LL> dp2; 
+vector<vi> g;
+
+void dfs(int u, int par) {
+	
+	int j = 0;
+
+	vector<vll> dp3; 
+	dp3.clear(); 
+	dp3.assign(1LL * n + 2LL, vll(n*1LL + 1LL, 0LL));
+
+	for (int i : g[u]) {
+		if (par != i) {
+			dfs(i, u);
+			if (!j) {
+				dp3[j][0] = dp3[j][1] = 1; 
+				for (int K = 1; K <= k; K++) {
+					if (K)
+						dp2[u] += dp1[i][K - 1];
+					dp3[j][K] += (dp1[i][K]);
+				}
+			}
+			else {
+				
+				for (int K = 0; K <= k; K++) {
+					if (K)
+						dp2[u] += dp1[i][K - 1];
+					if (K) {
+						dp3[j][K] += dp3[j-1][K - 1]; 
+					}
+					for (int x = 0; x <= K; x++) {
+						dp3[j][K] += (dp3[j - 1][K - x])*(dp1[i][x]);
+					}
+				}
+			}
+			dp2[u] += (dp2[i]);
+			j++; 
+		}
+	}
+	 
+	if(j)
+		dp1[u] = dp3[j - 1]; 
+
+	if (!j) {
+		dp1[u][0] = 1; 
+		dp2[u] = 0; 
+	}
+
+}
+int main() {
+    
+    //freopen("input.txt" , "r" , stdin); 
+	cin >> n >> k; 
+
+	g.clear(); g.resize(n + 1);
+	
+	dp1.assign(n + 2, vll(n*1LL + 1, 0LL)); 
+	dp2.assign(1LL * n + 2LL, 0LL);
+
+	for (int i = 0; i < n - 1; i++) {
+		int a, b; 
+		cin >> a >> b; 
+		a--, b--; 
+		g[a].push_back(b); g[b].push_back(a); 
+	}
+	dfs(0, -1); 
+	LL ans = dp2[0]; 
+
+	for (int i = 0; i <= k; i++) {
+        ans += dp1[0][i]; 
+	}
+
+	cout << ans + 1 << endl; 
+	return 0; 
+}
+\end{minted}
+
+\begin{flushleft}
+%\textbf{\underline{Model Solution for Persistent Segment Tree, RMQ, Suffix Arrays and LCP Arrays}}\\
+Tested on CodeChef QString\\
+\end{flushleft}
+
+\begin{minted}[autogobble,linenos=true,breaklines,frame=single]{c++}
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+typedef long long LL;
+ 
+// This class takes as an argument an array of size N. 0-based index for the given array. 
+// Example : A[] = {1,2,3,4,6}, call the constructor by (A, 5)
+// It assumes that given elements will be unique and lie in the range [1, N].
+// Method KthMinimum(l, r, k) return the kth minimum number in the given sub-array [l...r] in O(log N) time. l, r, k all are 1-based.
+// Method RankingOfK(l, r, k) return the rank of k in the sub-array [l...r] in O(log N) time. l, r, k are all 1-based.
+// This class does not cares about the validity of the query. It assumes that given query is valid. So be careful while using it.
+class PersistentSegmentTree{
+public:
+	PersistentSegmentTree(int A[], int n){
+		N = n;
+		head = (node **)calloc(N+1, sizeof(node *));
+		head[0] = create(1, N);
+		for(int i = 0; i<N; ++i){
+			head[i+1] = insert(1, N, A[i], head[i]);
+		}
+	}
+	int KthMinimum(int l, int r, int k){
+		return KthMinimum(head[l-1], head[r], k, 1, N);
+	}
+	int RankingOfK(int l, int r, int k){
+		return RankingOfK(head[l-1], head[r], k, 1, N);
+	}
+	~PersistentSegmentTree(){
+		free(head);
+	}
+private:
+	struct node{
+		int val;
+		node * left;
+		node * right;
+	};
+	int N;
+	node ** head;
+	node * make_node(int val){
+		node * nd = (node *)calloc(1, sizeof(node));
+		nd -> val = val;
+		nd -> left = NULL;
+		nd -> right = NULL;
+		return nd;
+	}
+	node * create(int l, int r){
+		node * nd = make_node(0);
+		int m = (l+r) >> 1;
+		if(l != r){
+			nd -> left = create(l, m);
+			nd -> right = create(m+1,r);
+		}
+		return nd;
+	}
+	node * insert(int l, int r, int v, node * n){
+		node * nd = make_node(0);
+		if(l == r){
+			assert(l == v);
+			nd -> val += 1;
+			return nd;
+		}
+		int m = (l+r) >> 1;
+		if(v <= m) nd -> left = insert(l, m, v, n->left), nd->right = n->right;
+		else nd -> right = insert(m+1, r, v, n->right), nd->left = n->left;
+		(nd -> val) = (nd -> left) -> val + (nd -> right) -> val;
+		return nd;
+	}
+	int KthMinimum(node * l, node * r, int k, int i, int j){
+		if(l->left == NULL and l->right == NULL){
+			assert(r->left == r->right and r->left == NULL);
+			assert(k==1 and i==j);
+			return i;
+		}
+		int m = (i+j)>>1;
+		int val = (r->left->val) - (l->left->val);
+		if(val >= k) return KthMinimum(l->left, r->left, k, i, m);
+		else return KthMinimum(l->right, r->right, k-val, m+1, j);
+	}
+	int RankingOfK(node * l, node * r, int k, int i, int j){
+		if(l->left == NULL and l->right == NULL){
+			assert(r->left == r->right and r->left == NULL);
+			assert(k==i and i==j);
+			return 1;
+		}
+		int m = (i+j)>>1;
+		int val = (r->left->val) - (l->left->val);
+		if(k <= m) return RankingOfK(l->left, r->left, k, i, m);
+		else return RankingOfK(l->right, r->right, k, m+1, j) + val;
+	}};
+// This class takes as an argument an array of size N. 0-based index for the given array. 
+// Example : A[] = {1,2,3,4,6}, call the constructor by (A, 5)
+// Method findMin(l, r) return the minimum element in the range [l...r] in O(1) time after preprocessing time of O(N log N).
+// l and r are 1-based index. Memory used is O(NlogN) as well.
+// this class doesn't checks the validity of the inputs. Be careful why using this class
+class RMQ
+{
+public:
+	RMQ(int A[], int n){
+		RMQ::init();
+		H = ceil(log2(n));
+		N = n;
+		M.resize(N+1);
+		for(int i=0;i<=N;++i)
+			M[i].resize(H+1);
+		for(int i=0;i<=H;++i){
+			int jump = ((1<<i)>>1);
+			for(int j=1;j<=N;++j)
+			{
+				if(i == 0) M[j][i] = A[j-1];
+				else if(j+jump <= N) M[j][i] = min(M[j][i-1], M[j+jump][i-1]);
+				else  M[j][i] = M[j][i-1];
+			}
+		}
+	}
+	~RMQ(){
+		for(int i=0;i<=N;++i) M[i].clear();
+		M.clear();
+	}
+	int findMin(int l, int r){
+		if(l>r) return 0;
+		int d = A[r-l+1];
+		r = r - (1<<d) + 1;
+		return min(M[l][d], M[r][d]);}
+private:
+	int H, N;
+	vector<vector<int> > M;
+	int A[2000001];
+	void init(){
+		memset(A, -1, sizeof A);
+		for(int i=0; (1<<i)<=2000000; ++i){
+			A[(1<<i)] = i;
+		}
+		for(int i=1;i<=2000000;++i){
+			if(A[i] != -1) continue;
+			A[i] = A[i-1];
+			}return;}};
+\end{minted}
+
+\begin{minted}[frame=single,autogobble,linenos=true,linenos=true,breaklines]{c++}		
+template<typename T> T gcd(T a , T b){return (a ? gcd(b % a , a): b);} //supposing a is small and b is large.
+template<typename T> pair<T,T> extend_euclid(T a, T b){ //supposing a is small and b is large.
+	pair<T,T> a_one = {1, 0} , b_one = {0 , 1}; 
+	if(!b)return a_one;
+	while(a){
+		T q = b / a; T r = b % a;
+		T dx = b_one.first - q*a_one.first; 
+		T dy = b_one.second - q*a_one.second; 
+		b = a; a = r;
+		b_one = a_one; 
+		a_one = {dx , dy}; 
+	}
+	return b_one;   
+}
+
+int main(){
+	LL a, m; cin >> a >> m;
+	auto ans = extend_euclid(a, m); 
+	LL x = (ans.first + m)%m; //Inverse Modulo (m) $ ax=1 mod(m) and gcd(a,m) == 1
+	cout << (ans.first + m) % m << endl; 
+	return 0; 
+}
+\end{minted}
+\end{multicols}
+\end{landscape}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
