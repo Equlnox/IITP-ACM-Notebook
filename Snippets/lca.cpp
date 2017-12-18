@@ -8,7 +8,6 @@ int log(int t){
 void dfs(int u, int p){
 	if(p + 1){
 		h[u] = h[p] + 1;
-		par[u][0].se = cit[p]; 
 	}
 
 	par[u][0] = p; 
@@ -40,9 +39,8 @@ int lca(int u , int v){
 			u = par[u][i]; 
 	}
 
-	if(v == u) return ans; 
-	ans = merge(ans, cit[v]); 
-
+	if(v == u) return u;
+	
 	for(int i = L - 1; i >= 0; i--){
 		if(par[u][i] + 1 && par[u][i] != par[v][i]){ 
 			u = par[u][i]; v = par[v][i]; 
