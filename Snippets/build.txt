@@ -1,0 +1,4 @@
+{
+"cmd": ["g++ -std=c++14 -g -Wall '${file}' && timeout 15s '${file_path}/./a.out'<'${file_path}/input.txt'>'${file_path}/output.txt'"],
+"shell":true
+}
