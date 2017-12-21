@@ -1,8 +1,3 @@
-# Any line followed by a '#' character is ignored
-# Section headings must be in square brackets
-# Subsections within a section should follow the format:
-#   [filename within code directory][tab character \t][subsection title]
-
 [Sublime]
 Sublime/build.txt		Build
 Sublime/Snippet.cpp		Snippet
@@ -12,7 +7,7 @@ graphs/lca.cpp	Lowest Common Ancestor
 graphs/Auxtree.cpp	Auxiliary Tree
 graphs/ArticulationPointandBridges.cpp	Articulation Point and Bridges
 graphs/Biconnected.cpp	Biconnected Components
-graphs/2sat.cpp	2-SAT
+graphs/2sat.cpp		2-SAT
 graphs/Dinic.cpp	Dinic's Max Flow
 graphs/mcmf.cpp		Min Cost Max Flow
 graphs/Globalmincut.cpp		Global Min Cut
@@ -20,3 +15,5 @@ graphs/BipartiteMatchingAugmenting.cpp	Bipartite Matching
 graphs/Hopcraft.cpp		Hopcraft-Karp
 graphs/hungarian.cpp	Hungarian
 
+[Data Structures]
+DS/implicittreap.cpp	Implicit Treap

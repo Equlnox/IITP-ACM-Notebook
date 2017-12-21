@@ -1,6 +1,6 @@
 *.out
-contents.fdb_latexmk
-notebook.fls
-notebook.log
-notebook.toc
-notebook.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.toc
+*.aux
