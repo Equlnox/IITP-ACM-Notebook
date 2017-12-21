@@ -1,10 +1,3 @@
-// typedef ll to be int if you want int
-// typedef ld to be double if you want double
-// FFT takes a Vector of Complex numbers by reference and finds their Discrete Fourier/Inverse Fourier transform.
-// Size of the Vector must be a power of 2
-// To find Fourier transform the parameter inv=1, For Inverse Fourier Transform inv=-1
-// The function Convolution takes two Vectors(VL), adjusts their size to be a power of 2 
-// and finds their Convolution using FFT and inverse FFT and returns the convolution Vector (VL)
 const long double PI=acos(-1.0);
 typedef long long ll;
 typedef long double ld;
@@ -47,7 +40,9 @@ Complex operator/(Complex a,ld b){
 Complex EXP(ld theta){
 	return Complex(cos(theta),sin(theta));
 }
+
 typedef vector<Complex> VC;
+
 void FFT(VC& A,int inv){
 	int l=A.size();
 	int b=bits(l)-1;
@@ -76,28 +71,28 @@ void FFT(VC& A,int inv){
 		}
 	}
 }
-VL Convolution(VL a,VL b){
-	int l1=a.size()+b.size();
-	int bit=bits(l1);
-	int l=1<<bit;
-	a.resize(l,0LL);
-	b.resize(l,0LL);
-	VC A,B,C;
-	for(auto i:a){
-		A.push_back(Complex((ld)i,0));
+
+VL Convolution(VL & a,VL & b){
+	int tot_size = (int)a.size() + (int)b.size();
+	int bit = bits(tot_size);
+	int l = 1 << bit;
+	VC A, B, C;
+	A.reserve(l); B.reserve(l); C.reserve(l);
+	for(int i = 0; i < l; i ++) {
+		if(i < (int)a.size()) A.pb({(ld)a[i], 0.0});
+		else A.pb({0.0, 0.0});
+		if(i < (int)b.size()) B.pb({(ld)b[i], 0.0});
+		else B.pb({0.0, 0.0});		
 	}
-	for(auto i:b){
-		B.push_back(Complex((ld)i,0));
+	FFT(A, 1);
+	FFT(B, 1);
+	for(int i = 0; i < l; i ++) {
+		C.pb(A[i] * B[i]);
 	}
-	FFT(A,1);
-	FFT(B,1);
-	for(int i=0;i<l;i++){
-		C.push_back(A[i]*B[i]);
-	}
-	FFT(C,-1);
+	FFT(C, -1);
 	VL c;
-	for(auto i:C){
-		c.push_back(round(i.r));
+	for(auto & i : C) {
+		c.pb(round(i.r));
 	}
 	return c;
 }
