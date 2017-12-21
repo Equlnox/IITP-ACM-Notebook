@@ -25,7 +25,7 @@ public:
 		identity=e;
 		zero=z;
 		t.assign(2*n,e);
-		lz.assign(n,z);
+		lz.assign(2*n,z);
 		size=n;
 		height = sizeof(int)*8-__builtin_clz(n);
 	}
@@ -54,7 +54,7 @@ public:
 		}
 		return combine(lt,rt);
 	}
-	void update(int p,T v){push(p);for(t[p+=size]=v;p>>=1;)t[p]=combine(t[p<<1],t[p<<1|1]);}
+	void update(int p,T v){push(p+=size);for(t[p]=v;p>>=1;)t[p]=combine(t[p<<1],t[p<<1|1]);}
 	void update(int l,int r,L v){
 		push(l+=size);
 		push(r+=size);
