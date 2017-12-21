@@ -1,20 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long				ll;
-typedef pair<int,int >			pii;
-template<typename T>
-using V = vector<T>;
-#define SYNC					ios_base::sync_with_stdio(0);cin.tie(0);
-#define rep(i,b)				for(int i=0;i<b;i++)
-#define repn(i,n)				for(int i=1;i<=n;i++)
-#define ALL(x)					(x).begin(),(x).end()
-#define fi						first
-#define se						second
-#define pb						push_back
-#define dzx						cerr<<"here";
-const ll MOD=1e9+7,INF=0x3F3F3F3F3F3F3F3F;
-const int inf=0x3F3F3F3F;
-/* Equinox */
 int tt=0;
 class CostFlowGraph{
 public:
@@ -26,9 +9,7 @@ public:
 	V<V<int> > g;
 	V<Edge> e;
 	V<int> pot;
-	int n;
-	int flow;
-	int cost;
+	int n, flow, cost;
 	CostFlowGraph(int sz){
 		n=sz;
 		g.resize(n);
@@ -108,33 +89,3 @@ public:
 		}while(cur);
 	}
 };
-int32_t main(){SYNC
-	int t;
-	cin>>t;
-	while(t--){
-		int n;
-		cin>>n;
-		V<int> fre(n+1,0);
-		CostFlowGraph cg(n+2);
-		repn(i,n){
-			int x;
-			cin>>x;
-			fre[x]++;
-		}
-		repn(i,n){
-			cg.addEdge(i,n+1,1,0);
-			cg.addEdge(0,i,fre[i],0);
-		}
-		int e;
-		cin>>e;
-		while(e--){
-			int x,y;
-			cin>>x>>y;
-			cg.addEdge(x,y,n,1);
-			cg.addEdge(y,x,n,1);
-		}
-		cg.mcf(0,n+1);
-		cout<<cg.cost<<"\n";
-	}
-	return 0;
-}
