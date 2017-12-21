@@ -4,6 +4,7 @@ Sublime/Snippet.cpp		Snippet
 
 [Combinatorial optimization]
 graphs/lca.cpp	Lowest Common Ancestor
+graphs/hld.cpp	Heavy-Light Decomposition
 graphs/Auxtree.cpp	Auxiliary Tree
 graphs/ArticulationPointandBridges.cpp	Articulation Point and Bridges
 graphs/Biconnected.cpp	Biconnected Components
