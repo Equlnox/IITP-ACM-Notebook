@@ -1,6 +1,7 @@
 \documentclass[15pt,a4paper]{article}
+% \usepackage{amsmath, amsthm, amssymb, amsfonts} 
 \usepackage[left=1cm,right=1cm,top=0.7in,bottom=1cm]{geometry}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -11,8 +12,8 @@
 \renewcommand*{\ttdefault}{pcr}
 \renewcommand\cftsecfont{\fontsize{8}{9}\bfseries}
 \renewcommand\cftsecpagefont{\fontsize{8}{9}\mdseries}
-\renewcommand\cftsubsecfont{\fontsize{5}{6}\mdseries}
-\renewcommand\cftsubsecpagefont{\fontsize{5}{6}\mdseries}
+\renewcommand\cftsubsecfont{\fontsize{8}{9}\mdseries}
+\renewcommand\cftsubsecpagefont{\fontsize{8}{9}\mdseries}
 \renewcommand\cftsecafterpnum{\vspace{-1ex}}
 \renewcommand\cftsubsecafterpnum{\vspace{-1ex}}
 
@@ -24,6 +25,9 @@
     showstringspaces=false,
     basicstyle=\fontsize{12}{10}\ttfamily,
     tabsize=2,
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{gray},
 }
 \lstdefinestyle{cpp}{
 	style=shared,

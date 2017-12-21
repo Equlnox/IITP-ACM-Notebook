@@ -1,20 +1,33 @@
-[Sublime]
-Sublime/build.txt		Build
-Sublime/Snippet.cpp		Snippet
-
+[Misc]
+misc/build.txt	Build
+misc/Snippet.cpp	Snippet
+misc/stacksizeincrease.cpp	Stack Size Increase
+misc/variadic_mul_and_add.cpp	Variadic Multiplication and Addition
 [Combinatorial optimization]
 graphs/lca.cpp	Lowest Common Ancestor
 graphs/hld.cpp	Heavy-Light Decomposition
 graphs/Auxtree.cpp	Auxiliary Tree
 graphs/ArticulationPointandBridges.cpp	Articulation Point and Bridges
 graphs/Biconnected.cpp	Biconnected Components
-graphs/2sat.cpp		2-SAT
+graphs/2sat.cpp	2-SAT
 graphs/Dinic.cpp	Dinic's Max Flow
-graphs/mcmf.cpp		Min Cost Max Flow
-graphs/Globalmincut.cpp		Global Min Cut
+graphs/mcmf.cpp	Min Cost Max Flow
+graphs/Globalmincut.cpp	Global Min Cut
 graphs/BipartiteMatchingAugmenting.cpp	Bipartite Matching
-graphs/Hopcraft.cpp		Hopcraft-Karp
+graphs/Hopcraft.cpp	Hopcraft-Karp
 graphs/hungarian.cpp	Hungarian
 
 [Data Structures]
 DS/implicittreap.cpp	Implicit Treap
+DS/segtree.cpp	Segment Tree
+DS/lazy.cpp	Lazy Propagation
+DS/dsu.cpp	Disjoin Set Union
+
+[Math]
+math/extended_euclid.cpp	Extended Euclid
+math/FastExponentiation.cpp	Fast Exponentiation
+math/FFT.cpp	Fast Fourier Transform
+math/large_factorial.cpp	Large Factorial
+math/LargeModuloExponentiation.cpp	Large Modulo Exponentiation
+math/LargeModuloMultiplication.cpp	Large Modulo Multiplication
+math/SegmentedSeive.cpp	Segmented Sieve
