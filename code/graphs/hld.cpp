@@ -1,75 +1,53 @@
-int n;
-V<V<P<int>> > g;
-V<int> values;
-V<int> depth;
-V<int> size;
-V<int> hchild;
-V<V<int> > chains;
-V<int> head;
-V<int> cmap,idmap;
-V<int> parent;
-V<P<int> > Edges;
-V<Segtree> trees;
-void dfs(int u,int p){
-	parent[u]=p;
-	depth[u]=depth[p]+1;
-	size[u]=1;
-	int hs=0,hv=-1;
-	for(auto v:g[u])	if(v.fi!=p){
-		dfs(v.fi,u);
-		values[v.fi]=v.se;
-		size[u]+=size[v.fi];
-		if(size[v.fi]>hs){
-			hv=v.fi;
-			hs=size[v.fi];;
-		}
+V<V<int> > g,chains;
+V<int> value,cpar,cid,id,depth;
+V<SegTree<int>> trees;
+int dfs(int c,int p){
+	depth[c]=depth[p]+1;
+	int sz=1;
+	auto it=find(g[c].begin(),g[c].end(),p);
+	if(it!=g[c].end())
+		g[c].erase(it);
+	if(g[c].empty())
+		return 1;
+	int mx=0;
+	for(auto &i:g[c]){
+		int cur=dfs(i,c);
+		sz+=cur;
+		if(cur>mx)
+			mx=cur,swap(i,g[c][0]);
 	}
-	hchild[u]=hv;
+	return sz;
 }
-void form(int u,int p){
-	cmap[u]=(int)chains.size()-1;
-	idmap[u]=(int)chains.back().size();
-	if(chains.back().size()==0){
-		head.pb(u);
+void form_chains(int c){
+	cid[c]=(int)chains.size()-1;
+	id[c]=(int)chains.back().size();
+	chains.back().pb(value[c]);
+	for(int i=0;i<(int)g[c].size();i++){
+		if(i)
+			chains.pb({}),cpar.pb(c);
+		form_chains(g[c][i]);
 	}
-	chains.back().pb(values[u]);
-	if(hchild[u]!=-1)
-		form(hchild[u],u);
-	for(auto v:g[u])	if(v.fi!=p && v.fi!=hchild[u]){
-		chains.pb({});
-		form(v.fi,u);
-	}
+	if(g[c].empty())
+		trees.pb(SegTree<int>([](int a,int b){return max(a,b);},0,(int)chains.back().size(),chains.back()));
 }
-void build(){
-	for(int i=0;i<chains.size();i++){
-		trees.pb(Segtree(chains[i]));
-	}
+void update(int v,int val){
+	trees[cid[v]].update(id[v],val);
 }
 int query(int u,int v){
 	int r=0;
 	while(u!=v){
-		if(cmap[v]==cmap[u]){
+		if(cid[v]==cid[u]){
 			if(depth[v]<depth[u])
 				swap(v,u);
-			r=max(r,trees[cmap[v]].query(idmap[u]+1,idmap[v]));
+			r=max(r,trees[cid[v]].query(id[u]+1,id[v]));
 			v=u;
 		}
 		else{
-			if(depth[head[cmap[v]]]<depth[head[cmap[u]]])
+			if(depth[cpar[cid[v]]]<depth[cpar[cid[u]]])
 				swap(v,u);
-			int h=head[cmap[v]];
-			int hid=idmap[h];
-			int vid=idmap[v];
-			r=max(r,trees[cmap[v]].query(hid,vid));
-			v=parent[h];
+			r=max(r,trees[cid[v]].query(0,id[v]));
+			v=cpar[cid[v]];
 		}
 	}
 	return r;
-}
-void update(int idx,int val){
-	auto p=Edges[idx-1];
-	int v=p.se;
-	if(depth[p.se]<depth[p.fi])
-		v=p.fi;
-	trees[cmap[v]].update(idmap[v],val);
 }
