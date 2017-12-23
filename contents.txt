@@ -16,6 +16,7 @@ graphs/Globalmincut.cpp	Global Min Cut
 graphs/BipartiteMatchingAugmenting.cpp	Bipartite Matching
 graphs/Hopcraft.cpp	Hopcraft-Karp
 graphs/hungarian.cpp	Hungarian
+graphs/linkcut.cpp	Link
 
 [Data Structures]
 DS/implicittreap.cpp	Implicit Treap
