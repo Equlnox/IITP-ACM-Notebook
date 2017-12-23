@@ -6,7 +6,7 @@ void seive(){
 	p.set();
 	for(int i=2;i*i<=N;i++){
 		if(p[i]){
-			for(int j=i;j<=N;j+=i){
+			for(int j=i*i;j<=N;j+=i){
 				p.reset(j);
 			}
 		}
