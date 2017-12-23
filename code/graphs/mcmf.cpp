@@ -1,4 +1,3 @@
-int tt=0;
 class CostFlowGraph{
 public:
 	struct Edge{	
@@ -9,20 +8,15 @@ public:
 	V<V<int> > g;
 	V<Edge> e;
 	V<int> pot;
-	int n, flow, cost;
+	int n;
+	int flow;
+	int cost;
 	CostFlowGraph(int sz){
 		n=sz;
 		g.resize(n);
 		pot.assign(n,0);
 		flow=0;
 		cost=0;
-	}
-	void clear(){
-		flow=0;cost=0;
-		for(int i=0;i<(int)e.size();i++){
-			e[i].f+=e[i^1].f;
-			e[i^1].f=0;
-		}
 	}
 	void addEdge(int u,int v,int cap,int c){
 		g[u].pb((int)e.size());
@@ -48,44 +42,39 @@ public:
 			pot[i]+=npot[i];
 		}
 	}
-	void dfs(int t,V<bool> &v,V<int> &stk){
-		auto cur=stk.back();
-		v[e[cur].v]=1;
-		if(e[stk.back()].v==t)
-			return ;
-		for(auto i:g[e[cur].v])	if(!v[e[i].v] && e[i].f>0 && (pot[e[cur].v]-pot[e[i].v]+e[i].c)==0){
-			stk.pb(i);
-			dfs(t,v,stk);
-			if(e[stk.back()].v==t)
-				return ;
+	void negativeEdges(int s){
+		pot.assign(n,inf);
+		pot[s]=0;
+		for(int j=0;j<n;j++)
+			for(int i=0;i<(int)e.size();i++)	if(e[i].f>0 && pot[e[i^1].v]!=inf){
+				pot[e[i].v]=min(pot[e[i].v],pot[e[i^1].v]+e[i].c);
 		}
-		stk.pop_back();
 	}
-	int augment(int s,int t){
-		V<bool> v(n,false);
-		vector<int> stk;
-		if(g[s].size()==0)
-			return 0;
-		stk.pb(g[s][0]^1);
-		dfs(t,v,stk);
-		if(stk.empty())
-			return 0;
-		int mx=inf;
-		for(int i=1;i<(int)stk.size();i++)
-			mx=min(mx,e[stk[i]].f);
-		for(int i=1;i<(int)stk.size();i++){
-			e[stk[i]].f-=mx;
-			e[(stk[i])^1].f+=mx;
+	int augment(int s,int t,int fl,V<bool> &v){
+		if(s==t)
+			return fl;
+		v[s]=1;
+		for(auto i:g[s])	if(!v[e[i].v] && e[i].f>0 && (pot[s]-pot[e[i].v]+e[i].c)==0){
+			int cf=augment(e[i].v,t,min(fl,e[i].f),v);
+			if(cf!=0){
+				e[i].f-=cf;
+				e[i^1].f+=cf;
+				return cf;
+			}
 		}
-		return mx;
+		return 0;
 	}
-	void mcf(int s,int t){
+	void mcf(int s,int t,bool neg=0){
 		int cur=0;
+		V<bool> vis;
+		if(neg)
+			negativeEdges(s);
 		do{
+			vis.assign(n,0);
 			flow+=cur;
 			cost+=(pot[t]-pot[s]);
 			assignPots(s);
-			cur=augment(s,t);
+			cur=augment(s,t,inf,vis);
 		}while(cur);
 	}
 };
