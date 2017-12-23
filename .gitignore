@@ -4,3 +4,4 @@
 *.log
 *.toc
 *.aux
+.fuse_*

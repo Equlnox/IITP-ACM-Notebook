@@ -21,13 +21,21 @@ graphs/hungarian.cpp	Hungarian
 DS/implicittreap.cpp	Implicit Treap
 DS/segtree.cpp	Segment Tree
 DS/lazy.cpp	Lazy Propagation
-DS/dsu.cpp	Disjoin Set Union
 
 [Math]
 math/extended_euclid.cpp	Extended Euclid
-math/FastExponentiation.cpp	Fast Exponentiation
 math/FFT.cpp	Fast Fourier Transform
 math/large_factorial.cpp	Large Factorial
-math/LargeModuloExponentiation.cpp	Large Modulo Exponentiation
 math/LargeModuloMultiplication.cpp	Large Modulo Multiplication
 math/SegmentedSeive.cpp	Segmented Sieve
+math/randprime.cpp	Miller Rabin
+math/random_number.cpp	Random Number Generator
+
+[Strings]
+strings/aho-corasick.cpp	Aho Corasick
+strings/suffix_array.cpp	Suffix Array
+strings/suffix_tree.cpp	Suffix Tree
+
+[Geometry]
+geometry/geometry.cpp	Geometry Library
+geometry/convex_hull.cpp	Convex Hull

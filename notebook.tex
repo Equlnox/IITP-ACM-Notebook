@@ -8,7 +8,26 @@
 \usepackage{tocloft}
 \usepackage{pdflscape}
 \usepackage{multicol}
-
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+% \usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{float}
+% \usepackage{fullpage}
+%\usepackage{geometry}
+% \usepackage[top=0pt, bottom=1cm, left=0.3cm, right=0.3cm]{geometry}
+% \usepackage[margin = 1cm]{geometry}
+% \usepackage{graphicx}
+% \usepackage{subcaption}
+% \usepackage[scaled]{beramono}
+% \usepackage{titling}
+% \usepackage{datetime}
+% \usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{mathtools}
 \renewcommand*{\ttdefault}{pcr}
 \renewcommand\cftsecfont{\fontsize{8}{9}\bfseries}
 \renewcommand\cftsecpagefont{\fontsize{8}{9}\mdseries}
@@ -16,6 +35,9 @@
 \renewcommand\cftsubsecpagefont{\fontsize{8}{9}\mdseries}
 \renewcommand\cftsecafterpnum{\vspace{-1ex}}
 \renewcommand\cftsubsecafterpnum{\vspace{-1ex}}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareRobustCommand{\stirling}{\genfrac\{\}{0pt}{}}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 
 
 \lstdefinestyle{shared}{
@@ -86,5 +108,310 @@
 \input contents.tex
 
 \end{multicols}
+\newpage
+\begingroup
+\fontsize{12pt}{12pt}\selectfont
+\section{Formulas}
+\begin{multicols*}{3}
+    \begin{tabular}{@{}l|l|l@{}}
+        \toprule
+        Catalan &   $C_0=1$, $C_n=\frac{1}{n+1}\binom{2n}{n} = \sum_{i=0}^{n-1}C_iC_{n-i-1} = \frac{4n-2}{n+1}C_{n-1}$  & \\
+        Stirling 1st kind & $\left[{0\atop 0}\right]=1$, $\left[{n\atop 0}\right]=\left[{0\atop n}\right]=0$, $\left[{n\atop k}\right]=(n-1)\left[{n-1\atop k}\right]+\left[{n-1\atop k-1}\right]$ & \#perms of $n$ objs with exactly $k$ cycles\\
+        Stirling 2nd kind & $\left\{{n\atop 1}\right\}=\left\{{n\atop n}\right\}=1$, $\left\{{n\atop k}\right\} = k \left\{{ n-1 \atop k }\right\} + \left\{{n-1\atop k-1}\right\}$ & \#ways to partition $n$ objs into $k$ nonempty sets\\
+        Euler   & $\left \langle {n\atop 0} \right \rangle = \left \langle {n\atop n-1} \right \rangle = 1 $, $\left \langle {n\atop k} \right \rangle = (k+1) \left \langle {n-1\atop {k}} \right \rangle + (n-k)\left \langle {{n-1}\atop {k-1}} \right \rangle$ & \#perms of $n$ objs with exactly $k$ ascents \\
+        Euler 2nd Order &  $\left \langle \!\!\left \langle {n\atop k} \right \rangle \!\! \right \rangle = (k+1) \left \langle \!\! \left \langle {{n-1}\atop {k}} \right \rangle \!\! \right \rangle +(2n-k-1)\left \langle \!\! \left \langle {{n-1}\atop {k-1}} \right \rangle  \!\! \right \rangle$ & \#perms of ${1,1,2,2,...,n,n}$ with exactly $k$ ascents \\
+        Bell & $B_1 = 1$, $B_n = \sum_{k=0}^{n-1} B_k \binom{n-1}{k} = \sum_{k=0}^n\left\{{n\atop k}\right\}$ & \#partitions of $1..n$ (Stirling 2nd, no limit on k)\\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{10pt}
+    \begin{tabular}{ll}
+        \#labeled rooted trees & $n^{n-1}$ \\
+        \#labeled unrooted trees & $n^{n-2}$ \\
+        \#forests of $k$ rooted trees & $\frac{k}{n}\binom{n}{k}n^{n-k}$ \\
+        % Kirchoff's theorem
+        $\sum_{i=1}^n i^2 = n(n+1)(2n+1)/6$ & $\sum_{i=1}^n i^3 = n^2(n+1)^2/4$ \\
+        $!n = n\times!(n-1)+(-1)^n$ & $!n = (n-1)(!(n-1)+!(n-2))$ \\
+        $\sum_{i=1}^n \binom{n}{i} F_i = F_{2n}$ & $\sum_{i} \binom{n-i}{i} = F_{n+1}$ \\
+%       $\sum_{k=0}^n \binom{k}{m} = \binom{n+1}{m+1}$ & $x^k = \sum_{i=0}^k i!\stirling{k}{i}\binom{x}{i} = \sum_{i=0}^k \left\langle {k \atop i} \right\rangle\binom{x+i}{k}$ \\
+        $a \equiv b \pmod{x,y} \Rightarrow a \equiv b \pmod{\lcm(x, y)}$ & $\sum_{d|n} \phi(d) = n$ \\
+        $ac\equiv bc\pmod{m} \Rightarrow a\equiv b\pmod{\frac{m}{\gcd(c,m)}}$ & $(\sum_{d|n} \sigma_0(d))^2 = \sum_{d|n} \sigma_0(d)^3$ \\
+        $p$ prime $\Leftrightarrow (p-1)!\equiv -1\pmod{p}$ & $\gcd(n^a-1,n^b-1) = n^{\gcd(a,b)}-1$ \\
+        $\sigma_x(n) = \prod_{i=0}^{r} \frac{p_i^{(a_i + 1)x} - 1}{p_i^x - 1}$ & $\sigma_0(n) = \prod_{i=0}^r (a_i + 1)$ \\
+        $\sum_{k=0}^m (-1)^k \binom{n}{k} = (-1)^m \binom{n-1}{m}$ & \\
+        $2^{\omega(n)} = O(\sqrt{n})$ & $\sum_{i=1}^n 2^{\omega(i)} = O(n \log n)$ \\
+        % Kinematic equations
+        $d = v_i t + \frac{1}{2}at^2$ & $v_f^2 = v_i^2 + 2ad$ \\
+        $v_f = v_i + at$ & $d = \frac{v_i + v_f}{2}t$ \\
+    \end{tabular}
+
+    \subsection{The Twelvefold Way}
+    Putting $n$ balls into $k$ boxes.\\
+    \begin{tabular}{@{}c|c|c|c|c|l@{}}
+        Balls & same & distinct & same & distinct & \\
+        Boxes & same & same & distinct & distinct & Remarks\\
+        \hline
+        - & $\mathrm{p}_k(n)$ & $\sum_{i=0}^k \stirling{n}{i}$ & $\binom{n+k-1}{k-1}$ & $k^n$ & $\mathrm{p}_k(n)$: \#partitions of $n$ into $\le k$ positive parts \\
+        $\mathrm{size}\ge 1$ & $\mathrm{p}(n,k)$ & $\stirling{n}{k}$ & $\binom{n-1}{k-1}$ & $k!\stirling{n}{k}$ & $\mathrm{p}(n,k)$: \#partitions of $n$ into $k$ positive parts \\
+        $\mathrm{size}\le 1$ & $[n \le k]$ & $[n \le k]$ & $\binom{k}{n}$ & $n!\binom{k}{n}$ & $[cond]$: $1$ if $cond=true$, else $0$\\
+        \bottomrule
+    \end{tabular}
+
+
+\end{multicols*}
+\clearpage
+
+% \item Number of permutations of length $n$ that have no fixed
+%     points (derangements): $D_0 = 1, D_1 = 0, D_n = (n - 1)(D_{n-1}
+%     + D_{n-2})$
+% \item Number of permutations of length $n$ that have exactly $k$
+%     fixed points: $\binom{n}{k} D_{n-k}$
+
+\begin{multicols*}{3}
+    
+\begin{itemize}
+    \item \textbf{Legendre symbol:} $\left(\frac{a}{b}\right) = a^{(b-1)/2} \pmod{b}$, $b$ odd prime.
+    \item \textbf{Heron's formula:} A triangle with side lengths
+    $a,b,c$ has area $\sqrt{s(s-a)(s-b)(s-c)}$ where $s =
+    \frac{a+b+c}{2}$.
+    \item \textbf{Pick's theorem:} A polygon on an integer grid
+    strictly containing $i$ lattice points and having $b$ lattice
+    points on the boundary has area $i + \frac{b}{2} - 1$. (Nothing
+    similar in higher dimensions)
+    \item \textbf{Euler characteristic:} A finite, connected, planar graph is drawn in the plane without any edge intersections where $v$ denotes $|V|$, $e$ denotes $|E|$ and $f$ denotes the number of faces, then $v - e + f = 2$
+    \item \textbf{Baby Step Giant Step:} Given a \textbf{cyclic group} $\mathcal{G}$ of order $n$, a generator $\alpha$ of the group and a group element $\beta$, find $x$ such that $\alpha^x = \beta$\\
+        \textbf{Algorithm: }\begin{itemize}
+            \item Write $x$ as $x = im + j$, where $m = \ceil{\sqrt{n})}$ and $0 \leq i < m$ and $0 \leq j < m$.
+            \item Hence, we have $\beta(\alpha^{-m})^{i} = \alpha^j$.
+            \item $\forall j\ where\ 0 \leq j < m:$ calculate $\alpha^j$ and add them to \verb!std::unordered_map<int, int>!
+            \item $\forall i\ where\ 0 \leq i < m:$ check if $\beta(\alpha^{-m})^{i}$ exists in the \verb|std::unordered_map<int, int>| or not
+        \end{itemize}
+    \item \textbf{Euler's totient:} The number of integers less than
+    $n$ that are coprime to $n$ are $n\prod_{p|n}\left(1 - \frac{1}{p}\right)$
+    where each $p$ is a distinct prime factor of $n$.\\
+    \textbf{Calculation of $\phi(n)\ \forall n\ where\ 2 \leq n < 10^6$}
+        \begin{itemize}
+            \item In the regular sieve initialize $\phi(i) = i\ \forall i$.
+            \item As soon as a prime $i$ is found, update $\phi(j) = \phi(j) - \phi(j)/i$
+        \end{itemize}
+    \item \textbf{Gauss Generalization and Wilson's theorem: } Let $p$ be an odd prime and $\alpha$ be a positive integer, then in $\mathbb{Z}/(n)$
+        \begin{equation*}
+            \prod_{k = 1}^{\phi(n)} = 
+                \begin{cases*}
+                    0 & $n = 1$,\\
+                    -1 & $n = 4$, $p^{\alpha}$, $2p^{\alpha}$, \\
+                    1 & otherwise
+                \end{cases*}
+        \end{equation*}
+    
+    \item \textbf{Chinese Remainder Theorem:} Given pairwise coprime positive integers $n_1, n_2, \cdots, n_k$ and arbitrary integers $a_1, a_2, \cdots, a_k$, the system of simultaneous congruences such that
+        \begin{align*}
+            x &\equiv a_1 \pmod{n_1}\\
+            x &\equiv a_2 \pmod{n_2}\\
+              &\vdots\\
+            x &\equiv a_k \pmod{n_k}
+        \end{align*}
+    has a solution, and the solution is unique modulo $N = n_1n_2\cdots n_k$.
+    To construct the solution, do the following
+        \begin{enumerate}
+            \item Compute $N = n_1 \times n_2 \cdots \times n_k$.
+            \item For each $i = 1, 2,\cdots,k$, compute
+                \begin{align*}
+                    y_i = \dfrac{N}{n_i} = n_1n_2\cdots n_in_{i + 1}\cdots n_k.
+                \end{align*}
+            \item For each $i = 1, 2, \cdots k,$ compute $z_i \equiv y_i^{-1} \pmod n_i$ using Euclid's extended algorithm
+            \item The integer $x = \sum_{i = 1}^{k} a_iy_iz_i$ is a solution to the system of the congruences and $x \mod{N}$ is the unique solution modulo $N$.
+        \end{enumerate}
+    \item \textbf{Shoelace Formula for Area of Simple Polygon:} Polygon represented by $(x_0, y_0), \cdots (x_{n - 1}, y_{n - 1})$, then it's area $\mathcal{A}$ is
+        \begin{equation*}
+        \begin{aligned}
+            \mathcal{A} &= \dfrac{1}{2} \bigg|\sum_{i = 0}^{n - 1}x_i(y_{i + 1} - y_{i - 1}) \bigg| \\
+                        & where\ (i + 1) \equiv (i + 1) \mod {n}\\
+                        & where\ (i - 1) \equiv (i - 1 + n) \mod {n}\\
+        \end{aligned}
+        \end{equation*}
+    \item \textbf{Line Intersection Formula: } Given 2 lines
+    \begin{equation*}
+        \begin{cases*}
+            A_1x + B_1y + C_1 = 0,\\
+            A_2x + B_2y + C_2 = 0
+        \end{cases*}
+    \end{equation*}
+    We find their intersection using Cramer's rule where \textbf{Note the minus signs in front of them}
+    \begin{equation*}
+        x = -\dfrac{\begin{vmatrix}
+                C_1 & B_1\\
+                C_2 & B_2\\
+            \end{vmatrix}}{\begin{vmatrix}
+                A_1 & B_1\\
+                A_2 & B_2\\
+            \end{vmatrix}},
+        \\
+        y = -\dfrac{\begin{vmatrix}
+                A_1 & C_1\\
+                A_2 & C_2\\
+            \end{vmatrix}}{\begin{vmatrix}
+                A_1 & B_1\\
+                A_2 & B_2\\
+            \end{vmatrix}},\\       
+    \end{equation*}
+    \item \textbf{Circle-Line Intersection:} Intersection of a circle and a line given by
+        \begin{equation*}
+            \begin{cases}
+                x^2 + y^2 = r^2 \\
+                Ax + By + C = 0 \\
+            \end{cases}
+        \end{equation*}
+        If the circle is centered at point $(x_c, y_c)$, transform the coordinate system using
+        \begin{gather*}
+            x = X + x_c\\
+            y = Y + y_c
+        \end{gather*}
+    Calculate the point closest to origin $(x_0, y_0)$. It's distance from origin is $d_0 = \dfrac{|C|}{\sqrt{A^2 + B^2}}$, therefore Point $(x_0, y_0)$,
+        \begin{align*}
+            x_0 &= \dfrac{-AC}{A^2 + B^2}\\
+            y_0 &= \dfrac{-BC}{A^2 + B^2}
+        \end{align*}
+    If $d_0 < r$, then there are 2 intersections. If $d_0 = r$, then there is only one intersection. If $d_0 > r$, no intersection. Calculate $d = \sqrt{r^2 - \dfrac{C^2}{A^2 + B^2}}$ and $m = \sqrt{\dfrac{d^2}{A^2 + B^2}}$. The two points of intersections $(a_x, a_y)$ and $(b_x, b_y)$ are (if $d_0 < r$)
+        \begin{gather*}
+            a_x = x_0 + B \cdot m, a_y = y_0 - A  \cdot m\\
+            b_x = x_0 - B\cdot m, b_y = y_0 + A\cdot m
+        \end{gather*}
+    If $d_0 = r$, then $(x_0, y_0)$ is the intersection point which is tangent to the surface.
+    \item \textbf{Intersection of Circle and Circle:} Intersection of two circles whose equations are given as follows
+        \begin{equation*}
+                \begin{cases*}
+                    x^2 + y^2 = r_1^2\\
+                    (x - x_2)^2 + (y - y_2)^2 = r_2^2
+                \end{cases*}
+        \end{equation*}
+        Subtract these two equations to get the equation of line given as
+        \begin{gather*}
+            Ax + By + C = 0\\
+            A = -2x_2\\
+            B = -2y_2\\
+            C = x_2^2 + y_2^2 + r_1^2 - r_2^2
+        \end{gather*}
+    Now, solve this problem for intersection of a line and circle.
+    Now, handle the degenerate case when $x_2 = y_2 = 0$ and equation of line is $C = r_1^2 - r_2^2 = 0$. If the radii of the circles are same, then there are infinitely many intersections, if they differ, then there are no intersections.
+    \item \textbf{Konig's theorem:} In any bipartite graph $G=(L\cup R,E)$, the number
+    of edges in a maximum matching is equal to the number of
+    vertices in a minimum vertex cover. Let $U$ be the set of
+    unmatched vertices in $L$, and $Z$ be the set of vertices that
+    are either in $U$ or are connected to $U$ by an alternating
+    path. Then $K=(L\setminus Z)\cup(R\cap Z)$ is the minimum
+    vertex cover.
+    \item \textbf{Dilworth's Theorem:} There exists an antichain $A$,
+    and a partition of the order into a family$P$ of chains,such that the number
+    of chains in the partition equals the cardinality of A.
+    \item \textbf{Mirsky's Theorem:} A poset of height $h$ can be partitioned into $h$ antichains.
+    \item The number of vertices of a graph is equal to its minimum
+    vertex cover number plus the size of a maximum independent set.
+    \item A minumum Steiner tree for $n$ vertices requires at most $n-2$ additional Steiner vertices.
+    \item \textbf{Lagrange polynomial} through points $(x_0,y_0),\ldots,(x_k,y_k)$ is $L(x) = \sum_{j=0}^k y_j \prod_{\shortstack{$\scriptscriptstyle 0\leq m \leq k$ \\ $\scriptscriptstyle m\neq j$}} \frac{x-x_m}{x_j - x_m}$
+    \item \textbf{Hook length formula:} If $\lambda$ is a Young diagram and $h_{\lambda}(i,j)$ is the hook-length of cell $(i,j)$, then then the number of Young tableux $d_{\lambda} = n!/\prod h_{\lambda}(i,j)$.
+    \item \textbf{Moebius inversion formula:} If $f(n) = \sum_{d|n} g(d)$, then $g(n) = \sum_{d|n} \mu(d) f(n/d)$. If $f(n) = \sum_{m=1}^n g(\lfloor n/m\rfloor)$, then $g(n) = \sum_{m=1}^n \mu(m)f(\lfloor\frac{n}{m}\rfloor)$.
+    \\$\sum_{d|n} \mu(d) = [n=1]$
+    \\$\sum_{i=1}^n\sum_{j=1}^n[gcd(i,j)=1]= \sum_{d=1}^n\mu(d)\lfloor\frac{n}{d}\rfloor^2$
+    \item \#primitive pythagorean triples with hypotenuse $<n$ approx $n/(2\pi)$.
+    \item \textbf{Frobenius Number:} largest number which can't be
+    expressed as a linear combination of numbers $a_1,\ldots,a_n$
+    with non-negative coefficients. $g(a_1,a_2) = a_1a_2-a_1-a_2$,
+    $N(a_1,a_2)=(a_1-1)(a_2-1)/2$. $g(d\cdot a_1,d\cdot a_2,a_3) =
+    d\cdot g(a_1,a_2,a_3) + a_3(d-1)$. An integer $x>\left(\max_i
+    a_i\right)^2$ can be expressed in such a way iff.\ $x\ |\
+    \mathrm{gcd}(a_1,\ldots,a_n)$.
+\end{itemize}
+
+\subsection{Markov Chains}
+A Markov Chain can be represented as a weighted directed graph of
+states, where the weight of an edge represents the probability of
+transitioning over that edge in one timestep. Let $P^{(m)} = (p^{(m)}_{ij})$
+be the probability matrix of transitioning from state $i$ to state $j$
+in $m$ timesteps, and note that $P^{(1)}$ is the adjacency matrix of
+the graph. \textbf{Chapman-Kolmogorov:} $p^{(m+n)}_{ij} = \sum_{k}
+p^{(m)}_{ik} p^{(n)}_{kj}$. It follows that $P^{(m+n)} =
+P^{(m)}P^{(n)}$ and $P^{(m)} = P^m$. If $p^{(0)}$ is the initial
+probability distribution (a vector), then $p^{(0)}P^{(m)}$ is the
+probability distribution after $m$ timesteps.
+
+The return times of a state $i$ is $R_i = \{m\ |\ p^{(m)}_{ii} > 0 \}$,
+and $i$ is \textit{aperiodic} if $\gcd(R_i) = 1$. A MC is aperiodic if
+any of its vertices is aperiodic. A MC is \textit{irreducible} if the
+corresponding graph is strongly connected.
+
+A distribution $\pi$ is stationary if $\pi P = \pi$. If MC is
+irreducible then $\pi_i = 1/\mathbb{E}[T_i]$, where $T_i$ is the
+expected time between two visits at $i$. $\pi_j/\pi_i$ is the expected
+number of visits at $j$ in between two consecutive visits at $i$. A MC
+is \textit{ergodic} if $\lim_{m\to\infty} p^{(0)} P^{m} = \pi$. A MC is
+ergodic iff.\ it is irreducible and aperiodic.
+
+A MC for a random walk in an undirected weighted graph (unweighted
+graph can be made weighted by adding $1$-weights) has $p_{uv} =
+w_{uv}/\sum_{x} w_{ux}$. If the graph is connected, then $\pi_u =
+\sum_{x} w_{ux} / \sum_{v}\sum_{x} w_{vx}$. Such a random walk is
+aperiodic iff.\ the graph is not bipartite.
+
+An \textit{absorbing} MC is of the form $P = \left(\begin{matrix} Q & R
+\\ 0 & I_r \end{matrix}\right)$. Let $N = \sum_{m=0}^\infty Q^m = (I_t
+- Q)^{-1}$. Then, if starting in state $i$, the expected number of
+steps till absorption is the $i$-th entry in $N1$. If starting in state
+$i$, the probability of being absorbed in state $j$ is the $(i,j)$-th
+entry of $NR$.
+
+Many problems on MC can be formulated in terms of a system of
+recurrence relations, and then solved using Gaussian elimination.
+
+\subsection{Burnside's Lemma}
+Let $G$ be a finite group that acts on a set $X$. For each $g$ in $G$
+let $X^g$ denote the set of elements in $X$ that are fixed by $g$. Then
+the number of orbits \[ |X/G| = \frac{1}{|G|} \sum_{g\in G} |X^g| \]
+
+\[
+Z(S_n) = \frac{1}{n} \sum_{l=1}^n a_l Z(S_{n-l})
+\]
+
+\subsection{Bezout's identity}
+If $(x,y)$ is any solution to $ax+by=d$ (e.g.\ found by the Extended
+Euclidean Algorithm), then all solutions are given by \[
+\left(x+k\frac{b}{\gcd(a,b)}, y-k\frac{a}{\gcd(a,b)}\right) \]
+
+\subsection{Misc}
+\subsubsection{Determinants and PM}
+\begin{align*}
+det(A) &= \sum_{\sigma \in S_n}\text{sgn}(\sigma)\prod_{i = 1}^n a_{i,\sigma(i)}\\
+perm(A) &= \sum_{\sigma \in S_n} \prod_{i = 1}^n a_{i,\sigma(i)}\\
+pf(A) &= \frac{1}{2^nn!}\sum_{\sigma \in S_{2n}} \text{sgn}(\sigma)\prod_{i = 1}^n a_{\sigma(2i-1),\sigma(2i)}\\ &= \sum_{M \in \text{PM}(n)} \text{sgn}(M) \prod_{(i,j) \in M} a_{i,j}
+\end{align*}
+
+\subsubsection{BEST Theorem}
+Count directed Eulerian cycles. Number of OST given by
+Kirchoff's Theorem (remove r/c with root) $\#\textsc{OST}(G,r)
+\cdot \prod_{v}(d_v-1)!$
+
+\subsubsection{Primitive Roots}
+Only exists when $n$ is $2, 4, p^k, 2p^k$, where $p$ odd prime. Assume
+$n$ prime. Number of primitive roots $\phi(\phi(n))$
+Let $g$ be primitive root. All primitive roots are of the form $g^k$
+where $k,\phi(p)$ are coprime.\\ $k$-roots:
+$g^{i \cdot \phi(n) / k}$ for $0 \leq i < k$
+\paragraph{How to find a primitive root?}
+To test that $a$ is a primitive root of $p$ you need to do the following. First, let $s=\phi(p)$ where $\phi()$ is [the Euler's totient function][1]. If $p$ is prime, then $s=p-1$. Then you need to determine all the prime factors of $s$: $p_1,\ldots,p_k$. Finally, calculate $a^{s/p_i}\mod p$ for all $i=1\ldots k$, and if you find $1$ among residuals then it is NOT a primitive root, otherwise it is.\\
+So, basically you need to calculate and check $k$ numbers where $k$ is the number of different prime factors in $\phi(p)$.
+\subsubsection{Sum of primes} For any multiplicative $f$:
+\[
+S(n,p) = S(n, p-1) - f(p) \cdot (S(n/p,p-1) - S(p-1,p-1))
+\]
+
+\subsubsection{Floor}
+\begin{align*}
+&\left\lfloor \left\lfloor x/y \right\rfloor / z \right\rfloor = \left\lfloor x / (yz) \right\rfloor \\
+&x \% y = x - y \left\lfloor x / y \right\rfloor
+\end{align*}
+
+\clearpage
+\end{multicols*}
+\endgroup
 \end{landscape}
 \end{document}
