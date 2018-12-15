@@ -1,7 +1,10 @@
-V<V<int> > g,chains;
-V<int> value,cpar,cid,id,depth;
-V<SegTree<int>> trees;
+V<V<int> > g;
+int N;
+V<int> cpar, id, depth, parent;
+V<int> chain;
+
 int dfs(int c,int p){
+	parent[c] = p;
 	depth[c]=depth[p]+1;
 	int sz=1;
 	auto it=find(g[c].begin(),g[c].end(),p);
@@ -18,36 +21,44 @@ int dfs(int c,int p){
 	}
 	return sz;
 }
-void form_chains(int c){
-	cid[c]=(int)chains.size()-1;
-	id[c]=(int)chains.back().size();
-	chains.back().pb(value[c]);
+
+void form_chains(int c, int cp){
+	cpar[c] = cp;
+	id[c] = (int)chain.size();
+	chain.push_back(c);
 	for(int i=0;i<(int)g[c].size();i++){
 		if(i)
-			chains.pb({}),cpar.pb(c);
-		form_chains(g[c][i]);
+			form_chains(g[c][i], g[c][i]);
+		else
+			form_chains(g[c][i], cp);
 	}
-	if(g[c].empty())
-		trees.pb(SegTree<int>([](int a,int b){return max(a,b);},0,(int)chains.back().size(),chains.back()));
 }
-void update(int v,int val){
-	trees[cid[v]].update(id[v],val);
-}
-int query(int u,int v){
-	int r=0;
+
+void update(int u, int v){
 	while(u!=v){
-		if(cid[v]==cid[u]){
-			if(depth[v]<depth[u])
+		if(cpar[v] == cpar[u]){
+			if(depth[v] < depth[u])
 				swap(v,u);
-			r=max(r,trees[cid[v]].query(id[u]+1,id[v]));
-			v=u;
+			supdate(0, N - 1, 1, id[u]+1, id[v]);
+			v = u;
 		}
 		else{
-			if(depth[cpar[cid[v]]]<depth[cpar[cid[u]]])
+			if(depth[cpar[v]] < depth[cpar[u]])
 				swap(v,u);
-			r=max(r,trees[cid[v]].query(0,id[v]));
-			v=cpar[cid[v]];
+			supdate(0, N - 1, 1, id[cpar[v]], id[v]);
+			v = parent[cpar[v]];
 		}
 	}
-	return r;
+}
+
+void preprocess(int r) {
+	depth.resize(N);
+	depth[r] = 0;
+	cpar.resize(N);
+	parent.resize(N);
+	chain.clear();
+	chain.reserve(N);
+	id.resize(N);
+	dfs(r, r);
+	form_chains(r, r);
 }
