@@ -6,7 +6,6 @@ vector< int > G[MAX];
 int n, m, match[MAX], dist[MAX];
 // n: number of nodes on left side, nodes are numbered 1 to n
 // m: number of nodes on right side, nodes are numbered n+1 to n+m
-// G = NIL[0] ∪ G1[G[1---n]] ∪ G2[G[n+1---n+m]]
 
 bool bfs() {
     int i, u, v, len;
