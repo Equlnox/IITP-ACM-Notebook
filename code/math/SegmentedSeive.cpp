@@ -1,6 +1,6 @@
 // Segmented Seive
 // N=sqrt(b)
-// Time complexity: O(N×log(B-A))
+// Time complexity: O(N.log(B-A))
 #define A 1000000000000LL
 #define B 1000000100000LL
 bitset<B-A> p;
