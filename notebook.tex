@@ -160,6 +160,10 @@ Putting $n$ balls into $k$ boxes.\\
     \bottomrule
 \end{tabular}
 
+\subsection{DP Optimizations}
+    \begin{itemize}
+        \item \textbf{1D1D} $dp(x) = \min_{i=1}^{x-1}\{dp(i) + w[i, x]\}$ and follows quadrangle inequality $w[i, j] + w[i+1, j+1] \le w[i, j+1] + w[i+1, j]$. Then arg array is non-decreasing. Construct arg array using binary search.
+    \end{itemize}
 \subsection{Some primes}
 \begin{itemize}
 \item 7 digits - $2171159, 9368299, 1874351, 9873623, 3934741, 3932941, 4753739, 1251703, 8324893, 5610793$
