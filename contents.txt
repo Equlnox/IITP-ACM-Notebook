@@ -26,6 +26,7 @@ DS/lazy.cpp	Lazy Propagation
 [Math]
 math/extended_euclid.cpp	Extended Euclid
 math/FFT.cpp	Fast Fourier Transform
+math/ntt.cpp	Number Theoretic Transform
 math/large_factorial.cpp	Large Factorial
 math/LargeModuloMultiplication.cpp	Large Modulo Multiplication
 math/SegmentedSeive.cpp	Segmented Sieve
