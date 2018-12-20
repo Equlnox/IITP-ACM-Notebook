@@ -1,4 +1,4 @@
-vector<int> z_compute(string &S_) {
+vector<int> z_compute(const string & S_) {
   int zn = S_.size();
   vector<int> z((int)S_.size() + 10);
   int l = 0, r = 0;

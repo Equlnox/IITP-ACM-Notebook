@@ -37,6 +37,7 @@ math/random_number.cpp	Random Number Generator
 strings/aho-corasick.cpp	Aho Corasick
 strings/suffix_array.cpp	Suffix Array
 strings/suffix_tree.cpp	Suffix Tree
+strings/zFunction.cpp	Z Algorithm
 
 [Geometry]
 geometry/geometry.cpp	Geometry Library

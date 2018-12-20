@@ -40,7 +40,7 @@ void ukkadd(int c) { // add character s to the tree
     }
 }
 
-void build() {
+void Build() {
     ts=2;
     tv=0;
     tp=0;
@@ -56,4 +56,4 @@ void build() {
     // add the text to the tree, letter by letter
     for (la=0; la<(int)a.size(); ++la)
         ukkadd (a[la]-'a');
-}
+
