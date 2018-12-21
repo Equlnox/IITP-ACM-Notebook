@@ -1,11 +1,3 @@
-/*
- * Make sure to give the size of n atleast a larger than original (n + 100).
- * In the truth_table(), u, v are 1 based indexed.
- * Truth value of the nodes is calculated in the satisfiable() function i.e. val[] vector
- * st[] -> stack
- * comp[] -> component number of every node
- */
-
 class sat_2{
   public:
     int n, m, tag;

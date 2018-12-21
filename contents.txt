@@ -30,7 +30,6 @@ math/ntt.cpp	Number Theoretic Transform
 math/large_factorial.cpp	Large Factorial
 math/LargeModuloMultiplication.cpp	Large Modulo Multiplication
 math/SegmentedSeive.cpp	Segmented Sieve
-math/randprime.cpp	Miller Rabin
 math/random_number.cpp	Random Number Generator
 
 [Strings]
